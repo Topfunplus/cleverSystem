@@ -1,11 +1,22 @@
 <script setup lang="ts">
-import { reactive, ref } from 'vue'
+import { reactive, ref, watch } from 'vue'
+import { showConfirmDialog, showDialog } from 'vant'
+import type { FormInstance } from 'vant'
 
 const active = ref(0)
+const step = ref(0)
+const isFinished = ref(false)
+const formRef = ref<FormInstance | null>(null)
 
 // 切换tab页
-function onClickTab({ title }: { title: string }) {
-  console.log(title)
+function onClickTab({ title, disabled }: { title: string; disabled: boolean }) {
+  console.log(title, disabled)
+  if (disabled) {
+    showDialog({
+      title: '提示',
+      message: '请先填写申请信息'
+    })
+  }
 }
 
 // 访客的信息
@@ -22,17 +33,21 @@ const visitorInfo = reactive<VisitorInfo>({
   visitEndTime: ''
 })
 
-// 提交表单
+// todo 提交表单
 const onSubmit = () => {
-  console.log(visitorInfo)
+  showDialog({
+    title: '结果',
+    message: '提交申请成功'
+  }).then(() => {
+    active.value = 1
+    isFinished.value = true
+  })
 }
 
 // 选择时间确认
-const dateType = ref(true)
 // 时间展示用
 const dateValue = ref('')
 const showPicker = ref(false)
-const pickerValue = ref<string[]>([])
 
 // 日期选择
 const startDate = ref(['2022', '06', '01'])
@@ -59,14 +74,19 @@ const onCancel = () => {
 // 提交表单 调度弹窗选择审核人
 const auditShow = ref(false)
 
-function handleSubmit() {
-  auditShow.value = true
+async function handleSubmit() {
+  if (formRef.value) {
+    formRef.value.validate('user').then(() => {
+      auditShow.value = true
+      active.value = 1
+    })
+  }
 }
 
 // 审核人选择
 const auditInfo = reactive<AuditInfo>({
-  id: null,
-  name: null
+  id: 0,
+  name: ''
 })
 const auditChooseShow = ref(false)
 const columns: AuditColumn[] = [
@@ -87,23 +107,53 @@ const onConfirmAudit = ({
   auditPickerValue.value = selectedValues
   auditChooseShow.value = false
 }
+
+// 监听tab页切换
+// todo 确认是否要重新填写
+watch(
+  () => active.value,
+  () => {
+    if (active.value === 0) {
+      showConfirmDialog({
+        title: '提示',
+        message: '是否要重新填写访客申请信息?'
+      }).then(() => {
+        visitorInfo.visitorName = ''
+        visitorInfo.phone = ''
+        visitorInfo.idCard = ''
+        visitorInfo.visitorUnit = ''
+        visitorInfo.visitReason = ''
+        visitorInfo.cardImages = []
+        visitorInfo.faceImage = []
+        visitorInfo.visitTime = ''
+        visitorInfo.visitStartTime = ''
+        visitorInfo.visitEndTime = ''
+      })
+    }
+  },
+  {
+    immediate: false
+  }
+)
 </script>
 
 <template>
   <div>
+    <van-steps :active="step" active-icon="success" active-color="#1989fa">
+      <van-step>填写申请信息</van-step>
+      <van-step>申请进度</van-step>
+      <van-step>查看审核结果</van-step>
+    </van-steps>
     <van-tabs v-model:active="active" @click-tab="onClickTab">
       <van-tab title="填写申请信息">
-        <van-form @submit="onSubmit">
+        <van-form @submit="onSubmit" ref="form" name="user">
           <van-cell-group inset>
             <van-field
               v-model="visitorInfo.visitorName"
               name="姓名"
               label="姓名"
               placeholder="姓名"
-              :rules="[
-                { required: true, message: '请填写姓名' },
-                { min: 2, message: '姓名至少两个字符' }
-              ]"
+              :rules="[{ required: true, message: '请填写姓名' }]"
             />
             <van-field
               v-model="visitorInfo.phone"
@@ -135,20 +185,14 @@ const onConfirmAudit = ({
               name="访客单位"
               label="访客单位"
               placeholder="访客单位"
-              :rules="[
-                { required: true, message: '请填写访客单位' },
-                { min: 2, message: '访客单位至少两个字符' }
-              ]"
+              :rules="[{ required: true, message: '请填写访客单位' }]"
             />
             <van-field
               v-model="visitorInfo.visitReason"
               name="到访理由"
               label="到访理由"
               placeholder="访客单位"
-              :rules="[
-                { required: true, message: '请填写到访理由' },
-                { min: 5, message: '到访理由至少五个字符' }
-              ]"
+              :rules="[{ required: true, message: '请填写到访理由' }]"
             />
             <van-field name="cardImages" label="身份证正反面照片">
               <template #input>
@@ -215,12 +259,12 @@ const onConfirmAudit = ({
           </van-cell-group>
           <div style="margin: 16px">
             <van-button round block type="primary" native-type="submit" @click="handleSubmit"
-              >提交
+              >下一步
             </van-button>
           </div>
         </van-form>
       </van-tab>
-      <van-tab title="申请信息预览">内容 2</van-tab>
+      <van-tab title="申请信息预览" :disabled="!isFinished">内容 2</van-tab>
     </van-tabs>
   </div>
 </template>

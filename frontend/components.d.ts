@@ -10,6 +10,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     ApplyInfo: typeof import('./src/components/ApplyInfo.vue')['default']
     AuditChoose: typeof import('./src/components/AuditChoose.vue')['default']
+    AuditResult: typeof import('./src/components/AuditResult.vue')['default']
     IconCommunity: typeof import('./src/components/icons/IconCommunity.vue')['default']
     IconDocumentation: typeof import('./src/components/icons/IconDocumentation.vue')['default']
     IconEcosystem: typeof import('./src/components/icons/IconEcosystem.vue')['default']
@@ -29,6 +30,8 @@ declare module 'vue' {
     VanPopup: typeof import('vant/es')['Popup']
     VanRow: typeof import('vant/es')['Row']
     VanSlider: typeof import('vant/es')['Slider']
+    VanStep: typeof import('vant/es')['Step']
+    VanSteps: typeof import('vant/es')['Steps']
     VanTab: typeof import('vant/es')['Tab']
     VanTabs: typeof import('vant/es')['Tabs']
     VanTimePicker: typeof import('vant/es')['TimePicker']

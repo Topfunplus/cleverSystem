@@ -20,6 +20,6 @@ interface AuditColumn {
 
 // 审核人信息 传入id和name
 interface AuditInfo {
-  id: number | null
-  name: string | null
+  id: number
+  name: string
 }
