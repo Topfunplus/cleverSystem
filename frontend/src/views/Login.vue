@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { showToast } from 'vant';
 
 const active = ref('login');
 const username = ref('');

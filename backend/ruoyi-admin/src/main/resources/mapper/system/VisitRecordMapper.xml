@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.VisitRecordMapper">
+    
+    <resultMap type="VisitRecord" id="VisitRecordResult">
+        <result property="id"    column="id"    />
+        <result property="visitorId"    column="visitor_id"    />
+        <result property="entryTime"    column="entry_time"    />
+        <result property="exitTime"    column="exit_time"    />
+        <result property="isReentry"    column="is_reentry"    />
+    </resultMap>
+
+    <sql id="selectVisitRecordVo">
+        select id, visitor_id, entry_time, exit_time, is_reentry from visit_record
+    </sql>
+
+    <select id="selectVisitRecordList" parameterType="VisitRecord" resultMap="VisitRecordResult">
+        <include refid="selectVisitRecordVo"/>
+        <where>  
+            <if test="visitorId != null "> and visitor_id = #{visitorId}</if>
+            <if test="entryTime != null "> and entry_time = #{entryTime}</if>
+            <if test="exitTime != null "> and exit_time = #{exitTime}</if>
+            <if test="isReentry != null "> and is_reentry = #{isReentry}</if>
+        </where>
+    </select>
+    
+    <select id="selectVisitRecordById" parameterType="Long" resultMap="VisitRecordResult">
+        <include refid="selectVisitRecordVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertVisitRecord" parameterType="VisitRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into visit_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="visitorId != null">visitor_id,</if>
+            <if test="entryTime != null">entry_time,</if>
+            <if test="exitTime != null">exit_time,</if>
+            <if test="isReentry != null">is_reentry,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="visitorId != null">#{visitorId},</if>
+            <if test="entryTime != null">#{entryTime},</if>
+            <if test="exitTime != null">#{exitTime},</if>
+            <if test="isReentry != null">#{isReentry},</if>
+         </trim>
+    </insert>
+
+    <update id="updateVisitRecord" parameterType="VisitRecord">
+        update visit_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="visitorId != null">visitor_id = #{visitorId},</if>
+            <if test="entryTime != null">entry_time = #{entryTime},</if>
+            <if test="exitTime != null">exit_time = #{exitTime},</if>
+            <if test="isReentry != null">is_reentry = #{isReentry},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteVisitRecordById" parameterType="Long">
+        delete from visit_record where id = #{id}
+    </delete>
+
+    <delete id="deleteVisitRecordByIds" parameterType="String">
+        delete from visit_record where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

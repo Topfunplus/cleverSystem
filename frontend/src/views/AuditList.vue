@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { showToast, showDialog } from 'vant';
+import { showDialog } from 'vant';
 
 // 访客申请列表数据
 const visitList = ref([
@@ -38,7 +38,6 @@ const handleApprove = async (item: any) => {
             message: `确定通过访客 ${item.name} 的申请吗？`,
             showCancelButton: true,
         });
-        // TODO: 调用审核通过接口
         showToast('审核通过成功');
     } catch {
         // 用户取消操作

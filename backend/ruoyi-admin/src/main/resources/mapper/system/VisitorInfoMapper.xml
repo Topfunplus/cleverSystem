@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.VisitorInfoMapper">
+    
+    <resultMap type="VisitorInfo" id="VisitorInfoResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="phone"    column="phone"    />
+        <result property="idCard"    column="id_card"    />
+        <result property="visitorUnit"    column="visitor_unit"    />
+        <result property="visitReason"    column="visit_reason"    />
+        <result property="idCardFrontImage"    column="id_card_front_image"    />
+        <result property="idCardBackImage"    column="id_card_back_image"    />
+        <result property="faceImage"    column="face_image"    />
+        <result property="isCar"    column="is_car"    />
+        <result property="carPlate"    column="car_plate"    />
+        <result property="visitTime"    column="visit_time"    />
+        <result property="visitDuration"    column="visit_duration"    />
+        <result property="requestTime"    column="request_time"    />
+        <result property="status"    column="status"    />
+        <result property="firstApprovalTime"    column="first_approval_time"    />
+        <result property="firstApprovalOpinion"    column="first_approval_opinion"    />
+        <result property="secondApprovalTime"    column="second_approval_time"    />
+        <result property="secondApprovalOpinion"    column="second_approval_opinion"    />
+    </resultMap>
+
+    <sql id="selectVisitorInfoVo">
+        select id, name, phone, id_card, visitor_unit, visit_reason, id_card_front_image, id_card_back_image, face_image, is_car, car_plate, visit_time, visit_duration, request_time, status, first_approval_time, first_approval_opinion, second_approval_time, second_approval_opinion from visitor_info
+    </sql>
+
+    <select id="selectVisitorInfoList" parameterType="VisitorInfo" resultMap="VisitorInfoResult">
+        <include refid="selectVisitorInfoVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="idCard != null  and idCard != ''"> and id_card = #{idCard}</if>
+            <if test="visitorUnit != null  and visitorUnit != ''"> and visitor_unit = #{visitorUnit}</if>
+            <if test="visitReason != null  and visitReason != ''"> and visit_reason = #{visitReason}</if>
+            <if test="idCardFrontImage != null  and idCardFrontImage != ''"> and id_card_front_image = #{idCardFrontImage}</if>
+            <if test="idCardBackImage != null  and idCardBackImage != ''"> and id_card_back_image = #{idCardBackImage}</if>
+            <if test="faceImage != null  and faceImage != ''"> and face_image = #{faceImage}</if>
+            <if test="isCar != null "> and is_car = #{isCar}</if>
+            <if test="carPlate != null  and carPlate != ''"> and car_plate = #{carPlate}</if>
+            <if test="visitTime != null "> and visit_time = #{visitTime}</if>
+            <if test="visitDuration != null "> and visit_duration = #{visitDuration}</if>
+            <if test="requestTime != null "> and request_time = #{requestTime}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="firstApprovalTime != null "> and first_approval_time = #{firstApprovalTime}</if>
+            <if test="firstApprovalOpinion != null  and firstApprovalOpinion != ''"> and first_approval_opinion = #{firstApprovalOpinion}</if>
+            <if test="secondApprovalTime != null "> and second_approval_time = #{secondApprovalTime}</if>
+            <if test="secondApprovalOpinion != null  and secondApprovalOpinion != ''"> and second_approval_opinion = #{secondApprovalOpinion}</if>
+        </where>
+    </select>
+    
+    <select id="selectVisitorInfoById" parameterType="Long" resultMap="VisitorInfoResult">
+        <include refid="selectVisitorInfoVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertVisitorInfo" parameterType="VisitorInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into visitor_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="phone != null and phone != ''">phone,</if>
+            <if test="idCard != null and idCard != ''">id_card,</if>
+            <if test="visitorUnit != null">visitor_unit,</if>
+            <if test="visitReason != null">visit_reason,</if>
+            <if test="idCardFrontImage != null">id_card_front_image,</if>
+            <if test="idCardBackImage != null">id_card_back_image,</if>
+            <if test="faceImage != null">face_image,</if>
+            <if test="isCar != null">is_car,</if>
+            <if test="carPlate != null">car_plate,</if>
+            <if test="visitTime != null">visit_time,</if>
+            <if test="visitDuration != null">visit_duration,</if>
+            <if test="requestTime != null">request_time,</if>
+            <if test="status != null">status,</if>
+            <if test="firstApprovalTime != null">first_approval_time,</if>
+            <if test="firstApprovalOpinion != null">first_approval_opinion,</if>
+            <if test="secondApprovalTime != null">second_approval_time,</if>
+            <if test="secondApprovalOpinion != null">second_approval_opinion,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="phone != null and phone != ''">#{phone},</if>
+            <if test="idCard != null and idCard != ''">#{idCard},</if>
+            <if test="visitorUnit != null">#{visitorUnit},</if>
+            <if test="visitReason != null">#{visitReason},</if>
+            <if test="idCardFrontImage != null">#{idCardFrontImage},</if>
+            <if test="idCardBackImage != null">#{idCardBackImage},</if>
+            <if test="faceImage != null">#{faceImage},</if>
+            <if test="isCar != null">#{isCar},</if>
+            <if test="carPlate != null">#{carPlate},</if>
+            <if test="visitTime != null">#{visitTime},</if>
+            <if test="visitDuration != null">#{visitDuration},</if>
+            <if test="requestTime != null">#{requestTime},</if>
+            <if test="status != null">#{status},</if>
+            <if test="firstApprovalTime != null">#{firstApprovalTime},</if>
+            <if test="firstApprovalOpinion != null">#{firstApprovalOpinion},</if>
+            <if test="secondApprovalTime != null">#{secondApprovalTime},</if>
+            <if test="secondApprovalOpinion != null">#{secondApprovalOpinion},</if>
+         </trim>
+    </insert>
+
+    <update id="updateVisitorInfo" parameterType="VisitorInfo">
+        update visitor_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="phone != null and phone != ''">phone = #{phone},</if>
+            <if test="idCard != null and idCard != ''">id_card = #{idCard},</if>
+            <if test="visitorUnit != null">visitor_unit = #{visitorUnit},</if>
+            <if test="visitReason != null">visit_reason = #{visitReason},</if>
+            <if test="idCardFrontImage != null">id_card_front_image = #{idCardFrontImage},</if>
+            <if test="idCardBackImage != null">id_card_back_image = #{idCardBackImage},</if>
+            <if test="faceImage != null">face_image = #{faceImage},</if>
+            <if test="isCar != null">is_car = #{isCar},</if>
+            <if test="carPlate != null">car_plate = #{carPlate},</if>
+            <if test="visitTime != null">visit_time = #{visitTime},</if>
+            <if test="visitDuration != null">visit_duration = #{visitDuration},</if>
+            <if test="requestTime != null">request_time = #{requestTime},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="firstApprovalTime != null">first_approval_time = #{firstApprovalTime},</if>
+            <if test="firstApprovalOpinion != null">first_approval_opinion = #{firstApprovalOpinion},</if>
+            <if test="secondApprovalTime != null">second_approval_time = #{secondApprovalTime},</if>
+            <if test="secondApprovalOpinion != null">second_approval_opinion = #{secondApprovalOpinion},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteVisitorInfoById" parameterType="Long">
+        delete from visitor_info where id = #{id}
+    </delete>
+
+    <delete id="deleteVisitorInfoByIds" parameterType="String">
+        delete from visitor_info where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

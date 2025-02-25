@@ -30,9 +30,7 @@ CREATE TABLE audit_record
     auditor_id       INT                     NOT NULL COMMENT '审核人ID，外键，关联到用户表，表示审核人的ID',
     approval_status  ENUM ( '同意', '拒绝' ) NOT NULL COMMENT '审批状态，表示该级审核员对申请的审批结果（同意或拒绝）',
     approval_time    TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '审批时间，表示当前审核的时间（自动生成）',
-    approval_opinion TEXT COMMENT '审批意见，审核员对该申请的具体审批意见',
-    FOREIGN KEY (visitor_id) REFERENCES visitor_info (id) COMMENT '外键，关联到访客信息表',
-    FOREIGN KEY (auditor_id) REFERENCES sys_user (user_id) COMMENT '外键，关联到用户表的审核员'
+    approval_opinion TEXT COMMENT '审批意见，审核员对该申请的具体审批意见'
 ) COMMENT '用于存储访客审核相关记录的表';
 
 
@@ -41,8 +39,7 @@ CREATE TABLE qr_code_record
     id            INT AUTO_INCREMENT PRIMARY KEY COMMENT '二维码ID，主键，唯一标识每条二维码记录',
     visitor_id    INT  NOT NULL COMMENT '访客ID，外键，关联到访客信息表，表示该二维码对应的访客',
     qr_code       TEXT NOT NULL COMMENT '二维码内容，存储二维码的字符串，包含访客的基本信息（如姓名、身份证号等）',
-    creation_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间，二维码生成的时间（自动生成）',
-    FOREIGN KEY (visitor_id) REFERENCES visitor_info (id) COMMENT '外键，关联到访客信息表'
+    creation_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间，二维码生成的时间（自动生成）'
 ) COMMENT '用于存储访客二维码相关记录的表';
 
 CREATE TABLE visit_record
@@ -51,6 +48,5 @@ CREATE TABLE visit_record
     visitor_id INT NOT NULL COMMENT '访客ID，外键，关联到访客信息表，标识该访问记录属于哪个访客',
     entry_time TIMESTAMP COMMENT '进入时间，访客进入工厂的具体时间（时间戳）',
     exit_time  TIMESTAMP COMMENT '离开时间，访客离开工厂的具体时间（时间戳）',
-    is_reentry BOOLEAN DEFAULT 0 COMMENT '是否是重新进入，0表示首次进入，1表示重新进入，默认首次进入',
-    FOREIGN KEY (visitor_id) REFERENCES visitor_info (id) COMMENT '外键，关联到访客信息表'
+    is_reentry BOOLEAN DEFAULT 0 COMMENT '是否是重新进入，0表示首次进入，1表示重新进入，默认首次进入'
 ) COMMENT '用于存储访客访问工厂进出记录的表';

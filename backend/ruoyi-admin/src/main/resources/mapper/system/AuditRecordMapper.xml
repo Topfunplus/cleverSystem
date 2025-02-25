@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.AuditRecordMapper">
+    
+    <resultMap type="AuditRecord" id="AuditRecordResult">
+        <result property="id"    column="id"    />
+        <result property="visitorId"    column="visitor_id"    />
+        <result property="auditLevel"    column="audit_level"    />
+        <result property="auditorId"    column="auditor_id"    />
+        <result property="approvalStatus"    column="approval_status"    />
+        <result property="approvalTime"    column="approval_time"    />
+        <result property="approvalOpinion"    column="approval_opinion"    />
+    </resultMap>
+
+    <sql id="selectAuditRecordVo">
+        select id, visitor_id, audit_level, auditor_id, approval_status, approval_time, approval_opinion from audit_record
+    </sql>
+
+    <select id="selectAuditRecordList" parameterType="AuditRecord" resultMap="AuditRecordResult">
+        <include refid="selectAuditRecordVo"/>
+        <where>  
+            <if test="visitorId != null "> and visitor_id = #{visitorId}</if>
+            <if test="auditLevel != null  and auditLevel != ''"> and audit_level = #{auditLevel}</if>
+            <if test="auditorId != null "> and auditor_id = #{auditorId}</if>
+            <if test="approvalStatus != null  and approvalStatus != ''"> and approval_status = #{approvalStatus}</if>
+            <if test="approvalTime != null "> and approval_time = #{approvalTime}</if>
+            <if test="approvalOpinion != null  and approvalOpinion != ''"> and approval_opinion = #{approvalOpinion}</if>
+        </where>
+    </select>
+    
+    <select id="selectAuditRecordById" parameterType="Long" resultMap="AuditRecordResult">
+        <include refid="selectAuditRecordVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertAuditRecord" parameterType="AuditRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into audit_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="visitorId != null">visitor_id,</if>
+            <if test="auditLevel != null and auditLevel != ''">audit_level,</if>
+            <if test="auditorId != null">auditor_id,</if>
+            <if test="approvalStatus != null and approvalStatus != ''">approval_status,</if>
+            <if test="approvalTime != null">approval_time,</if>
+            <if test="approvalOpinion != null">approval_opinion,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="visitorId != null">#{visitorId},</if>
+            <if test="auditLevel != null and auditLevel != ''">#{auditLevel},</if>
+            <if test="auditorId != null">#{auditorId},</if>
+            <if test="approvalStatus != null and approvalStatus != ''">#{approvalStatus},</if>
+            <if test="approvalTime != null">#{approvalTime},</if>
+            <if test="approvalOpinion != null">#{approvalOpinion},</if>
+         </trim>
+    </insert>
+
+    <update id="updateAuditRecord" parameterType="AuditRecord">
+        update audit_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="visitorId != null">visitor_id = #{visitorId},</if>
+            <if test="auditLevel != null and auditLevel != ''">audit_level = #{auditLevel},</if>
+            <if test="auditorId != null">auditor_id = #{auditorId},</if>
+            <if test="approvalStatus != null and approvalStatus != ''">approval_status = #{approvalStatus},</if>
+            <if test="approvalTime != null">approval_time = #{approvalTime},</if>
+            <if test="approvalOpinion != null">approval_opinion = #{approvalOpinion},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteAuditRecordById" parameterType="Long">
+        delete from audit_record where id = #{id}
+    </delete>
+
+    <delete id="deleteAuditRecordByIds" parameterType="String">
+        delete from audit_record where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
