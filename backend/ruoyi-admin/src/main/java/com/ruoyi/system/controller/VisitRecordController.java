@@ -69,7 +69,7 @@ public class VisitRecordController extends BaseController {
     /**
      * 新增用于存储访客访问工厂进出记录的
      */
-    @PreAuthorize("@ss.hasPermi('system:record:add')")
+    @PreAuthorize("@ss.hasPermi('system:visit_record:add')")
     @Log(title = "用于存储访客访问工厂进出记录的", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody VisitRecord visitRecord) {
@@ -79,7 +79,7 @@ public class VisitRecordController extends BaseController {
     /**
      * 修改用于存储访客访问工厂进出记录的
      */
-    @PreAuthorize("@ss.hasPermi('system:record:edit')")
+    @PreAuthorize("@ss.hasPermi('system:visit_record:edit')")
     @Log(title = "用于存储访客访问工厂进出记录的", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody VisitRecord visitRecord) {
@@ -89,7 +89,7 @@ public class VisitRecordController extends BaseController {
     /**
      * 删除用于存储访客访问工厂进出记录的
      */
-    @PreAuthorize("@ss.hasPermi('system:record:remove')")
+    @PreAuthorize("@ss.hasPermi('system:visit_record:remove')")
     @Log(title = "用于存储访客访问工厂进出记录的", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids) {

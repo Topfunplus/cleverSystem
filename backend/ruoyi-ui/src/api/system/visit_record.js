@@ -1,44 +1,44 @@
 import request from '@/utils/request'
 
 // 查询用于存储访客审核相关记录的列表
-export function listVisitorRecord(query) {
+export function listVisitRecord(query) {
   return request({
-    url: '/system/visitor_record/list',
+    url: '/system/visit_record/list',
     method: 'get',
     params: query
   })
 }
 
 // 查询用于存储访客审核相关记录的详细
-export function getVisitorRecord(id) {
+export function getVisitRecord(id) {
   return request({
-    url: '/system/visitor_record/' + id,
+    url: '/system/visit_record/' + id,
     method: 'get'
   })
 }
 
 // 新增用于存储访客审核相关记录的
-export function addVisitorRecord(data) {
+export function addVisitRecord(data) {
   return request({
-    url: '/system/visitor_record',
+    url: '/system/visit_record',
     method: 'post',
     data: data
   })
 }
 
 // 修改用于存储访客审核相关记录的
-export function updateVisitorRecord(data) {
+export function updateVisitRecord(data) {
   return request({
-    url: '/system/visitor_record',
+    url: '/system/visit_record',
     method: 'put',
     data: data
   })
 }
 
 // 删除用于存储访客审核相关记录的
-export function delVisitorRecord(id) {
+export function delVisitRecord(id) {
   return request({
-    url: '/system/visitor_record/' + id,
+    url: '/system/visit_record/' + id,
     method: 'delete'
   })
 }
