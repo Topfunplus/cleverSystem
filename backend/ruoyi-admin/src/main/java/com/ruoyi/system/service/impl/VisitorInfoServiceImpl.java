@@ -8,7 +8,7 @@ import com.ruoyi.system.domain.VisitorInfo;
 import com.ruoyi.system.service.IVisitorInfoService;
 
 /**
- * 用于存储访客相关信息的Service业务层处理
+ * 用于访客相关信息的Service业务层处理
  * 
  * @author ruoyi
  * @date 2025-02-25
@@ -20,10 +20,10 @@ public class VisitorInfoServiceImpl implements IVisitorInfoService
     private VisitorInfoMapper visitorInfoMapper;
 
     /**
-     * 查询用于存储访客相关信息的
+     * 查询用于访客相关信息的
      * 
-     * @param id 用于存储访客相关信息的主键
-     * @return 用于存储访客相关信息的
+     * @param id 用于访客相关信息的主键
+     * @return 用于访客相关信息的
      */
     @Override
     public VisitorInfo selectVisitorInfoById(Long id)
@@ -32,10 +32,10 @@ public class VisitorInfoServiceImpl implements IVisitorInfoService
     }
 
     /**
-     * 查询用于存储访客相关信息的列表
+     * 查询用于访客相关信息的列表
      * 
-     * @param visitorInfo 用于存储访客相关信息的
-     * @return 用于存储访客相关信息的
+     * @param visitorInfo 用于访客相关信息的
+     * @return 用于访客相关信息的
      */
     @Override
     public List<VisitorInfo> selectVisitorInfoList(VisitorInfo visitorInfo)
@@ -44,9 +44,9 @@ public class VisitorInfoServiceImpl implements IVisitorInfoService
     }
 
     /**
-     * 新增用于存储访客相关信息的
+     * 新增用于访客相关信息的
      * 
-     * @param visitorInfo 用于存储访客相关信息的
+     * @param visitorInfo 用于访客相关信息的
      * @return 结果
      */
     @Override
@@ -56,9 +56,9 @@ public class VisitorInfoServiceImpl implements IVisitorInfoService
     }
 
     /**
-     * 修改用于存储访客相关信息的
+     * 修改用于访客相关信息的
      * 
-     * @param visitorInfo 用于存储访客相关信息的
+     * @param visitorInfo 用于访客相关信息的
      * @return 结果
      */
     @Override
@@ -68,9 +68,9 @@ public class VisitorInfoServiceImpl implements IVisitorInfoService
     }
 
     /**
-     * 批量删除用于存储访客相关信息的
+     * 批量删除用于访客相关信息的
      * 
-     * @param ids 需要删除的用于存储访客相关信息的主键
+     * @param ids 需要删除的用于访客相关信息的主键
      * @return 结果
      */
     @Override
@@ -80,9 +80,9 @@ public class VisitorInfoServiceImpl implements IVisitorInfoService
     }
 
     /**
-     * 删除用于存储访客相关信息的信息
+     * 删除用于访客相关信息的信息
      * 
-     * @param id 用于存储访客相关信息的主键
+     * @param id 用于访客相关信息的主键
      * @return 结果
      */
     @Override

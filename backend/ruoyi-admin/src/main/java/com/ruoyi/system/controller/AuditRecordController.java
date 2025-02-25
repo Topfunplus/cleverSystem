@@ -2,6 +2,7 @@ package com.ruoyi.system.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,83 +23,76 @@ import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
- * 用于存储访客审核相关记录的Controller
- * 
+ * 用于访客审核相关记录的Controller
+ *
  * @author ruoyi
  * @date 2025-02-25
  */
 @RestController
 @RequestMapping("/system/audit_record")
-public class AuditRecordController extends BaseController
-{
+public class AuditRecordController extends BaseController {
     @Autowired
     private IAuditRecordService auditRecordService;
 
     /**
-     * 查询用于存储访客审核相关记录的列表
+     * 查询用于访客审核相关记录的列表
      */
     @PreAuthorize("@ss.hasPermi('system:audit_record:list')")
     @GetMapping("/list")
-    public TableDataInfo list(AuditRecord auditRecord)
-    {
+    public TableDataInfo list(AuditRecord auditRecord) {
         startPage();
         List<AuditRecord> list = auditRecordService.selectAuditRecordList(auditRecord);
         return getDataTable(list);
     }
 
     /**
-     * 导出用于存储访客审核相关记录的列表
+     * 导出用于访客审核相关记录的列表
      */
     @PreAuthorize("@ss.hasPermi('system:audit_record:export')")
-    @Log(title = "用于存储访客审核相关记录的", businessType = BusinessType.EXPORT)
+    @Log(title = "用于访客审核相关记录的", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, AuditRecord auditRecord)
-    {
+    public void export(HttpServletResponse response, AuditRecord auditRecord) {
         List<AuditRecord> list = auditRecordService.selectAuditRecordList(auditRecord);
         ExcelUtil<AuditRecord> util = new ExcelUtil<AuditRecord>(AuditRecord.class);
-        util.exportExcel(response, list, "用于存储访客审核相关记录的数据");
+        util.exportExcel(response, list, "用于访客审核相关记录的数据");
     }
 
     /**
-     * 获取用于存储访客审核相关记录的详细信息
+     * 获取用于访客审核相关记录的详细信息
      */
     @PreAuthorize("@ss.hasPermi('system:audit_record:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
-    {
+    public AjaxResult getInfo(@PathVariable("id") Long id) {
         return success(auditRecordService.selectAuditRecordById(id));
     }
 
     /**
-     * 新增用于存储访客审核相关记录的
+     * 新增用于访客审核相关记录的
      */
     @PreAuthorize("@ss.hasPermi('system:audit_record:add')")
-    @Log(title = "用于存储访客审核相关记录的", businessType = BusinessType.INSERT)
+    @Log(title = "用于访客审核相关记录的", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody AuditRecord auditRecord)
-    {
+    public AjaxResult add(@RequestBody AuditRecord auditRecord) {
         return toAjax(auditRecordService.insertAuditRecord(auditRecord));
     }
 
     /**
-     * 修改用于存储访客审核相关记录的
+     * 修改用于访客审核相关记录的
      */
     @PreAuthorize("@ss.hasPermi('system:audit_record:edit')")
-    @Log(title = "用于存储访客审核相关记录的", businessType = BusinessType.UPDATE)
+    @Log(title = "用于访客审核相关记录的", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody AuditRecord auditRecord)
-    {
+    public AjaxResult edit(@RequestBody AuditRecord auditRecord) {
         return toAjax(auditRecordService.updateAuditRecord(auditRecord));
     }
 
     /**
-     * 删除用于存储访客审核相关记录的
+     * 删除用于访客审核相关记录的
      */
     @PreAuthorize("@ss.hasPermi('system:audit_record:remove')")
-    @Log(title = "用于存储访客审核相关记录的", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
-    {
+    @Log(title = "用于访客审核相关记录的", businessType = BusinessType.DELETE)
+    @DeleteMapping("/{ids}")
+    public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(auditRecordService.deleteAuditRecordByIds(ids));
     }
 }

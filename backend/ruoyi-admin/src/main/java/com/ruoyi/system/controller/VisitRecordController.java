@@ -23,7 +23,7 @@ import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
- * 用于存储访客访问工厂进出记录的Controller
+ * 用于访客访问工厂进出记录的Controller
  *
  * @author ruoyi
  * @date 2025-02-25
@@ -35,7 +35,7 @@ public class VisitRecordController extends BaseController {
     private IVisitRecordService visitRecordService;
 
     /**
-     * 查询用于存储访客访问工厂进出记录的列表
+     * 查询用于访客访问工厂进出记录的列表
      */
     @PreAuthorize("@ss.hasPermi('system:visit_record:list')")
     @GetMapping("/list")
@@ -46,19 +46,19 @@ public class VisitRecordController extends BaseController {
     }
 
     /**
-     * 导出用于存储访客访问工厂进出记录的列表
+     * 导出用于访客访问工厂进出记录的列表
      */
     @PreAuthorize("@ss.hasPermi('system:visit_record:export')")
-    @Log(title = "用于存储访客访问工厂进出记录的", businessType = BusinessType.EXPORT)
+    @Log(title = "用于访客访问工厂进出记录的", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, VisitRecord visitRecord) {
         List<VisitRecord> list = visitRecordService.selectVisitRecordList(visitRecord);
         ExcelUtil<VisitRecord> util = new ExcelUtil<VisitRecord>(VisitRecord.class);
-        util.exportExcel(response, list, "用于存储访客访问工厂进出记录的数据");
+        util.exportExcel(response, list, "用于访客访问工厂进出记录的数据");
     }
 
     /**
-     * 获取用于存储访客访问工厂进出记录的详细信息
+     * 获取用于访客访问工厂进出记录的详细信息
      */
     @PreAuthorize("@ss.hasPermi('system:visit_record:query')")
     @GetMapping(value = "/{id}")
@@ -67,30 +67,30 @@ public class VisitRecordController extends BaseController {
     }
 
     /**
-     * 新增用于存储访客访问工厂进出记录的
+     * 新增用于访客访问工厂进出记录的
      */
     @PreAuthorize("@ss.hasPermi('system:visit_record:add')")
-    @Log(title = "用于存储访客访问工厂进出记录的", businessType = BusinessType.INSERT)
+    @Log(title = "用于访客访问工厂进出记录的", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody VisitRecord visitRecord) {
         return toAjax(visitRecordService.insertVisitRecord(visitRecord));
     }
 
     /**
-     * 修改用于存储访客访问工厂进出记录的
+     * 修改用于访客访问工厂进出记录的
      */
     @PreAuthorize("@ss.hasPermi('system:visit_record:edit')")
-    @Log(title = "用于存储访客访问工厂进出记录的", businessType = BusinessType.UPDATE)
+    @Log(title = "用于访客访问工厂进出记录的", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody VisitRecord visitRecord) {
         return toAjax(visitRecordService.updateVisitRecord(visitRecord));
     }
 
     /**
-     * 删除用于存储访客访问工厂进出记录的
+     * 删除用于访客访问工厂进出记录的
      */
     @PreAuthorize("@ss.hasPermi('system:visit_record:remove')")
-    @Log(title = "用于存储访客访问工厂进出记录的", businessType = BusinessType.DELETE)
+    @Log(title = "用于访客访问工厂进出记录的", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(visitRecordService.deleteVisitRecordByIds(ids));

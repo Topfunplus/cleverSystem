@@ -8,7 +8,7 @@ import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
- * 用于存储访客相关信息的对象 visitor_info
+ * 用于访客相关信息的对象 visitor_info
  * 
  * @author ruoyi
  * @date 2025-02-25

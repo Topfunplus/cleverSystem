@@ -8,7 +8,7 @@ import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
- * 用于存储访客二维码相关记录的对象 qr_code_record
+ * 用于访客二维码相关记录的对象 qr_code_record
  * 
  * @author ruoyi
  * @date 2025-02-25

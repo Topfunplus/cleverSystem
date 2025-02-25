@@ -9,7 +9,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="手机号，访客的联系电话" prop="phone">
+      <el-form-item label="手机号" prop="phone">
         <el-input
           v-model="queryParams.phone"
           placeholder="请输入手机号，访客的联系电话"
@@ -17,15 +17,15 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="身份证号，访客的身份证号码，用于身份识别" prop="idCard">
+      <el-form-item label="身份证号" prop="idCard">
         <el-input
           v-model="queryParams.idCard"
-          placeholder="请输入身份证号，访客的身份证号码，用于身份识别"
+          placeholder="请输入身份证号"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="访客单位，访客所在单位名称" prop="visitorUnit">
+      <el-form-item label="访客单位" prop="visitorUnit">
         <el-input
           v-model="queryParams.visitorUnit"
           placeholder="请输入访客单位，访客所在单位名称"

@@ -8,7 +8,7 @@ import com.ruoyi.system.domain.VisitRecord;
 import com.ruoyi.system.service.IVisitRecordService;
 
 /**
- * 用于存储访客访问工厂进出记录的Service业务层处理
+ * 用于访客访问工厂进出记录的Service业务层处理
  * 
  * @author ruoyi
  * @date 2025-02-25
@@ -20,10 +20,10 @@ public class VisitRecordServiceImpl implements IVisitRecordService
     private VisitRecordMapper visitRecordMapper;
 
     /**
-     * 查询用于存储访客访问工厂进出记录的
+     * 查询用于访客访问工厂进出记录的
      * 
-     * @param id 用于存储访客访问工厂进出记录的主键
-     * @return 用于存储访客访问工厂进出记录的
+     * @param id 用于访客访问工厂进出记录的主键
+     * @return 用于访客访问工厂进出记录的
      */
     @Override
     public VisitRecord selectVisitRecordById(Long id)
@@ -32,10 +32,10 @@ public class VisitRecordServiceImpl implements IVisitRecordService
     }
 
     /**
-     * 查询用于存储访客访问工厂进出记录的列表
+     * 查询用于访客访问工厂进出记录的列表
      * 
-     * @param visitRecord 用于存储访客访问工厂进出记录的
-     * @return 用于存储访客访问工厂进出记录的
+     * @param visitRecord 用于访客访问工厂进出记录的
+     * @return 用于访客访问工厂进出记录的
      */
     @Override
     public List<VisitRecord> selectVisitRecordList(VisitRecord visitRecord)
@@ -44,9 +44,9 @@ public class VisitRecordServiceImpl implements IVisitRecordService
     }
 
     /**
-     * 新增用于存储访客访问工厂进出记录的
+     * 新增用于访客访问工厂进出记录的
      * 
-     * @param visitRecord 用于存储访客访问工厂进出记录的
+     * @param visitRecord 用于访客访问工厂进出记录的
      * @return 结果
      */
     @Override
@@ -56,9 +56,9 @@ public class VisitRecordServiceImpl implements IVisitRecordService
     }
 
     /**
-     * 修改用于存储访客访问工厂进出记录的
+     * 修改用于访客访问工厂进出记录的
      * 
-     * @param visitRecord 用于存储访客访问工厂进出记录的
+     * @param visitRecord 用于访客访问工厂进出记录的
      * @return 结果
      */
     @Override
@@ -68,9 +68,9 @@ public class VisitRecordServiceImpl implements IVisitRecordService
     }
 
     /**
-     * 批量删除用于存储访客访问工厂进出记录的
+     * 批量删除用于访客访问工厂进出记录的
      * 
-     * @param ids 需要删除的用于存储访客访问工厂进出记录的主键
+     * @param ids 需要删除的用于访客访问工厂进出记录的主键
      * @return 结果
      */
     @Override
@@ -80,9 +80,9 @@ public class VisitRecordServiceImpl implements IVisitRecordService
     }
 
     /**
-     * 删除用于存储访客访问工厂进出记录的信息
+     * 删除用于访客访问工厂进出记录的信息
      * 
-     * @param id 用于存储访客访问工厂进出记录的主键
+     * @param id 用于访客访问工厂进出记录的主键
      * @return 结果
      */
     @Override
