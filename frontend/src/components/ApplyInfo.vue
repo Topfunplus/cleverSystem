@@ -2,7 +2,8 @@
 import { reactive, ref, watch } from 'vue'
 import { showConfirmDialog, showDialog } from 'vant'
 import type { FormInstance } from 'vant'
-
+import AuditResult from '@/components/AuditResult.vue'
+import { AuditStatus } from '@/utils/enum'
 const active = ref(0)
 const step = ref(0)
 const isFinished = ref(false)
@@ -10,7 +11,6 @@ const formRef = ref<FormInstance | null>(null)
 
 // 切换tab页
 function onClickTab({ title, disabled }: { title: string; disabled: boolean }) {
-  console.log(title, disabled)
   if (disabled) {
     showDialog({
       title: '提示',
@@ -41,6 +41,8 @@ const onSubmit = () => {
   }).then(() => {
     active.value = 1
     isFinished.value = true
+    step.value = 1
+    // 数据库存值 审核状态为审核中
   })
 }
 
@@ -79,6 +81,7 @@ async function handleSubmit() {
     formRef.value.validate('user').then(() => {
       auditShow.value = true
       active.value = 1
+      step.value++
     })
   }
 }
@@ -86,7 +89,9 @@ async function handleSubmit() {
 // 审核人选择
 const auditInfo = reactive<AuditInfo>({
   id: 0,
-  name: ''
+  name: '',
+  status: AuditStatus.AUDIT_PASS.text
+
 })
 const auditChooseShow = ref(false)
 const columns: AuditColumn[] = [
@@ -96,9 +101,9 @@ const columns: AuditColumn[] = [
 ]
 const auditPickerValue = ref<string[]>([])
 const onConfirmAudit = ({
-  selectedValues,
-  selectedOptions
-}: {
+                          selectedValues,
+                          selectedOptions
+                        }: {
   selectedValues: []
   selectedOptions: [{ text: string; value: number }]
 }) => {
@@ -259,12 +264,14 @@ watch(
           </van-cell-group>
           <div style="margin: 16px">
             <van-button round block type="primary" native-type="submit" @click="handleSubmit"
-              >下一步
+            >下一步
             </van-button>
           </div>
         </van-form>
       </van-tab>
-      <van-tab title="申请信息预览" :disabled="!isFinished">内容 2</van-tab>
+      <van-tab title="申请信息预览" :disabled="!isFinished">
+        <AuditResult :visitorInfo="visitorInfo" :auditInfo="auditInfo"></AuditResult>
+      </van-tab>
     </van-tabs>
   </div>
 </template>
