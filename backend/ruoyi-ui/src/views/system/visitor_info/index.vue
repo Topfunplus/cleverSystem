@@ -1,10 +1,10 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="姓名，访客的真实姓名" prop="name">
+      <el-form-item label="姓名" prop="name">
         <el-input
           v-model="queryParams.name"
-          placeholder="请输入姓名，访客的真实姓名"
+          placeholder="请输入姓名"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -12,7 +12,7 @@
       <el-form-item label="手机号" prop="phone">
         <el-input
           v-model="queryParams.phone"
-          placeholder="请输入手机号，访客的联系电话"
+          placeholder="请输入手机号"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -28,65 +28,65 @@
       <el-form-item label="访客单位" prop="visitorUnit">
         <el-input
           v-model="queryParams.visitorUnit"
-          placeholder="请输入访客单位，访客所在单位名称"
+          placeholder="请输入访客单位"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="是否开车，0表示未开车，1表示开车，默认未开车" prop="isCar">
+      <el-form-item label="是否开车" prop="isCar">
         <el-input
           v-model="queryParams.isCar"
-          placeholder="请输入是否开车，0表示未开车，1表示开车，默认未开车"
+          placeholder="0:未开车，1:开车"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="车牌号，访客的车牌号码，开车时需要填写" prop="carPlate">
+      <el-form-item label="车牌号" prop="carPlate">
         <el-input
           v-model="queryParams.carPlate"
-          placeholder="请输入车牌号，访客的车牌号码，开车时需要填写"
+          placeholder="请输入车牌号"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="访客时间，访客计划进入的日期" prop="visitTime">
+      <el-form-item label="访客时间" prop="visitTime">
         <el-date-picker clearable
                         v-model="queryParams.visitTime"
                         type="date"
                         value-format="yyyy-MM-dd"
-                        placeholder="请选择访客时间，访客计划进入的日期">
+                        placeholder="请选择访客时间">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="访问时长，访客预定的访问时间，单位：分钟" prop="visitDuration">
+      <el-form-item label="访问时长" prop="visitDuration">
         <el-input
           v-model="queryParams.visitDuration"
-          placeholder="请输入访问时长，访客预定的访问时间，单位：分钟"
+          placeholder="请输入访问时长（分钟）"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="申请时间，访客提交申请的时间" prop="requestTime">
+      <el-form-item label="申请时间" prop="requestTime">
         <el-date-picker clearable
                         v-model="queryParams.requestTime"
                         type="date"
                         value-format="yyyy-MM-dd"
-                        placeholder="请选择申请时间，访客提交申请的时间">
+                        placeholder="请选择申请时间">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="一级审核时间，第一次审核的时间，表示审核员对申请的时间戳" prop="firstApprovalTime">
+      <el-form-item label="一级审核时间" prop="firstApprovalTime">
         <el-date-picker clearable
                         v-model="queryParams.firstApprovalTime"
                         type="date"
                         value-format="yyyy-MM-dd"
-                        placeholder="请选择一级审核时间，第一次审核的时间，表示审核员对申请的时间戳">
+                        placeholder="请选择一级审核时间">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="二级审核时间，第二次审核的时间，表示二级审核员的审核时间" prop="secondApprovalTime">
+      <el-form-item label="二级审核时间" prop="secondApprovalTime">
         <el-date-picker clearable
                         v-model="queryParams.secondApprovalTime"
                         type="date"
                         value-format="yyyy-MM-dd"
-                        placeholder="请选择二级审核时间，第二次审核的时间，表示二级审核员的审核时间">
+                        placeholder="请选择二级审核时间">
         </el-date-picker>
       </el-form-item>
       <el-form-item>
@@ -147,55 +147,55 @@
 
     <el-table v-loading="loading" :data="infoList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="访客ID，主键，唯一标识每个访客" align="center" prop="id"/>
-      <el-table-column label="姓名，访客的真实姓名" align="center" prop="name"/>
-      <el-table-column label="手机号，访客的联系电话" align="center" prop="phone"/>
-      <el-table-column label="身份证号，访客的身份证号码，用于身份识别" align="center" prop="idCard"/>
-      <el-table-column label="访客单位，访客所在单位名称" align="center" prop="visitorUnit"/>
-      <el-table-column label="到访理由，访客到工厂的目的或理由" align="center" prop="visitReason"/>
-      <el-table-column label="身份证正面照片，存储身份证正面的图像" align="center" prop="idCardFrontImage" width="100">
+      <el-table-column label="访客ID" align="center" prop="id"/>
+      <el-table-column label="姓名" align="center" prop="name"/>
+      <el-table-column label="手机号" align="center" prop="phone"/>
+      <el-table-column label="身份证号" align="center" prop="idCard"/>
+      <el-table-column label="访客单位" align="center" prop="visitorUnit"/>
+      <el-table-column label="到访理由" align="center" prop="visitReason"/>
+      <el-table-column label="身份证正面照片" align="center" prop="idCardFrontImage" width="100">
         <template slot-scope="scope">
           <image-preview :src="scope.row.idCardFrontImage" :width="50" :height="50"/>
         </template>
       </el-table-column>
-      <el-table-column label="身份证反面照片，存储身份证背面的图像" align="center" prop="idCardBackImage" width="100">
+      <el-table-column label="身份证反面照片" align="center" prop="idCardBackImage" width="100">
         <template slot-scope="scope">
           <image-preview :src="scope.row.idCardBackImage" :width="50" :height="50"/>
         </template>
       </el-table-column>
-      <el-table-column label="人脸照片，访客的脸部照片，用于闸机识别" align="center" prop="faceImage" width="100">
+      <el-table-column label="人脸照片" align="center" prop="faceImage" width="100">
         <template slot-scope="scope">
           <image-preview :src="scope.row.faceImage" :width="50" :height="50"/>
         </template>
       </el-table-column>
-      <el-table-column label="是否开车，0表示未开车，1表示开车，默认未开车" align="center" prop="isCar"/>
-      <el-table-column label="车牌号，访客的车牌号码，开车时需要填写" align="center" prop="carPlate"/>
-      <el-table-column label="访客时间，访客计划进入的日期" align="center" prop="visitTime" width="180">
+      <el-table-column label="是否开车" align="center" prop="isCar"/>
+      <el-table-column label="车牌号" align="center" prop="carPlate"/>
+      <el-table-column label="访客时间" align="center" prop="visitTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.visitTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="访问时长，访客预定的访问时间，单位：分钟" align="center" prop="visitDuration"/>
-      <el-table-column label="申请时间，访客提交申请的时间" align="center" prop="requestTime" width="180">
+      <el-table-column label="访问时长" align="center" prop="visitDuration"/>
+      <el-table-column label="申请时间" align="center" prop="requestTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.requestTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="审核状态，表示当前申请的审批状态" align="center" prop="status"/>
-      <el-table-column label="一级审核时间，第一次审核的时间，表示审核员对申请的时间戳" align="center"
+      <el-table-column label="审核状态" align="center" prop="status"/>
+      <el-table-column label="一级审核时间" align="center"
                        prop="firstApprovalTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.firstApprovalTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="一级审核意见，审核员对申请的意见或说明" align="center" prop="firstApprovalOpinion"/>
-      <el-table-column label="二级审核时间，第二次审核的时间，表示二级审核员的审核时间" align="center"
+      <el-table-column label="一级审核意见" align="center" prop="firstApprovalOpinion"/>
+      <el-table-column label="二级审核时间" align="center"
                        prop="secondApprovalTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.secondApprovalTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="二级审核意见，二级审核员的审核意见或说明" align="center" prop="secondApprovalOpinion"/>
+      <el-table-column label="二级审核意见" align="center" prop="secondApprovalOpinion"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -229,75 +229,75 @@
     <!-- 添加或修改用于存储访客相关信息的对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="姓名，访客的真实姓名" prop="name">
-          <el-input v-model="form.name" placeholder="请输入姓名，访客的真实姓名"/>
+        <el-form-item label="姓名" prop="name">
+          <el-input v-model="form.name" placeholder="请输入姓名"/>
         </el-form-item>
-        <el-form-item label="手机号，访客的联系电话" prop="phone">
-          <el-input v-model="form.phone" placeholder="请输入手机号，访客的联系电话"/>
+        <el-form-item label="手机号" prop="phone">
+          <el-input v-model="form.phone" placeholder="请输入手机号"/>
         </el-form-item>
-        <el-form-item label="身份证号，访客的身份证号码，用于身份识别" prop="idCard">
-          <el-input v-model="form.idCard" placeholder="请输入身份证号，访客的身份证号码，用于身份识别"/>
+        <el-form-item label="身份证号" prop="idCard">
+          <el-input v-model="form.idCard" placeholder="请输入身份证号"/>
         </el-form-item>
-        <el-form-item label="访客单位，访客所在单位名称" prop="visitorUnit">
-          <el-input v-model="form.visitorUnit" placeholder="请输入访客单位，访客所在单位名称"/>
+        <el-form-item label="访客单位" prop="visitorUnit">
+          <el-input v-model="form.visitorUnit" placeholder="请输入访客单位"/>
         </el-form-item>
-        <el-form-item label="到访理由，访客到工厂的目的或理由" prop="visitReason">
+        <el-form-item label="到访理由" prop="visitReason">
           <el-input v-model="form.visitReason" type="textarea" placeholder="请输入内容"/>
         </el-form-item>
-        <el-form-item label="身份证正面照片，存储身份证正面的图像" prop="idCardFrontImage">
+        <el-form-item label="身份证正面照片" prop="idCardFrontImage">
           <image-upload v-model="form.idCardFrontImage"/>
         </el-form-item>
-        <el-form-item label="身份证反面照片，存储身份证背面的图像" prop="idCardBackImage">
+        <el-form-item label="身份证反面照片" prop="idCardBackImage">
           <image-upload v-model="form.idCardBackImage"/>
         </el-form-item>
-        <el-form-item label="人脸照片，访客的脸部照片，用于闸机识别" prop="faceImage">
+        <el-form-item label="人脸照片" prop="faceImage">
           <image-upload v-model="form.faceImage"/>
         </el-form-item>
-        <el-form-item label="是否开车，0表示未开车，1表示开车，默认未开车" prop="isCar">
-          <el-input v-model="form.isCar" placeholder="请输入是否开车，0表示未开车，1表示开车，默认未开车"/>
+        <el-form-item label="是否开车" prop="isCar">
+          <el-input v-model="form.isCar" placeholder="0:未开车，1:开车"/>
         </el-form-item>
-        <el-form-item label="车牌号，访客的车牌号码，开车时需要填写" prop="carPlate">
-          <el-input v-model="form.carPlate" placeholder="请输入车牌号，访客的车牌号码，开车时需要填写"/>
+        <el-form-item label="车牌号" prop="carPlate">
+          <el-input v-model="form.carPlate" placeholder="请输入车牌号"/>
         </el-form-item>
-        <el-form-item label="访客时间，访客计划进入的日期" prop="visitTime">
+        <el-form-item label="访客时间" prop="visitTime">
           <el-date-picker clearable
                           v-model="form.visitTime"
                           type="date"
                           value-format="yyyy-MM-dd"
-                          placeholder="请选择访客时间，访客计划进入的日期">
+                          placeholder="请选择访客时间">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="访问时长，访客预定的访问时间，单位：分钟" prop="visitDuration">
-          <el-input v-model="form.visitDuration" placeholder="请输入访问时长，访客预定的访问时间，单位：分钟"/>
+        <el-form-item label="访问时长" prop="visitDuration">
+          <el-input v-model="form.visitDuration" placeholder="请输入访问时长（分钟）"/>
         </el-form-item>
-        <el-form-item label="申请时间，访客提交申请的时间" prop="requestTime">
+        <el-form-item label="申请时间" prop="requestTime">
           <el-date-picker clearable
                           v-model="form.requestTime"
                           type="date"
                           value-format="yyyy-MM-dd"
-                          placeholder="请选择申请时间，访客提交申请的时间">
+                          placeholder="请选择申请时间">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="一级审核时间，第一次审核的时间，表示审核员对申请的时间戳" prop="firstApprovalTime">
+        <el-form-item label="一级审核时间" prop="firstApprovalTime">
           <el-date-picker clearable
                           v-model="form.firstApprovalTime"
                           type="date"
                           value-format="yyyy-MM-dd"
-                          placeholder="请选择一级审核时间，第一次审核的时间，表示审核员对申请的时间戳">
+                          placeholder="请选择一级审核时间">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="一级审核意见，审核员对申请的意见或说明" prop="firstApprovalOpinion">
+        <el-form-item label="一级审核意见" prop="firstApprovalOpinion">
           <el-input v-model="form.firstApprovalOpinion" type="textarea" placeholder="请输入内容"/>
         </el-form-item>
-        <el-form-item label="二级审核时间，第二次审核的时间，表示二级审核员的审核时间" prop="secondApprovalTime">
+        <el-form-item label="二级审核时间" prop="secondApprovalTime">
           <el-date-picker clearable
                           v-model="form.secondApprovalTime"
                           type="date"
                           value-format="yyyy-MM-dd"
-                          placeholder="请选择二级审核时间，第二次审核的时间，表示二级审核员的审核时间">
+                          placeholder="请选择二级审核时间">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="二级审核意见，二级审核员的审核意见或说明" prop="secondApprovalOpinion">
+        <el-form-item label="二级审核意见" prop="secondApprovalOpinion">
           <el-input v-model="form.secondApprovalOpinion" type="textarea" placeholder="请输入内容"/>
         </el-form-item>
       </el-form>

@@ -1,20 +1,20 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="访客ID，外键，关联到访客信息表，表示该二维码对应的访客" prop="visitorId">
+      <el-form-item label="访客ID" prop="visitorId">
         <el-input
           v-model="queryParams.visitorId"
-          placeholder="请输入访客ID，外键，关联到访客信息表，表示该二维码对应的访客"
+          placeholder="请输入访客ID"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="创建时间，二维码生成的时间" prop="creationTime">
+      <el-form-item label="创建时间" prop="creationTime">
         <el-date-picker clearable
-          v-model="queryParams.creationTime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="请选择创建时间，二维码生成的时间">
+                        v-model="queryParams.creationTime"
+                        type="date"
+                        value-format="yyyy-MM-dd"
+                        placeholder="请选择创建时间">
         </el-date-picker>
       </el-form-item>
       <el-form-item>
@@ -32,7 +32,8 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['system:qr_code_record:add']"
-        >新增</el-button>
+        >新增
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -43,7 +44,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['system:qr_code_record:edit']"
-        >修改</el-button>
+        >修改
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -54,7 +56,8 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['system:qr_code_record:remove']"
-        >删除</el-button>
+        >删除
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -64,17 +67,18 @@
           size="mini"
           @click="handleExport"
           v-hasPermi="['system:qr_code_record:export']"
-        >导出</el-button>
+        >导出
+        </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="qr_code_recordList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="二维码ID，主键，唯一标识每条二维码记录" align="center" prop="id" />
-      <el-table-column label="访客ID，外键，关联到访客信息表，表示该二维码对应的访客" align="center" prop="visitorId" />
-      <el-table-column label="二维码内容，存储二维码的字符串，包含访客的基本信息" align="center" prop="qrCode" />
-      <el-table-column label="创建时间，二维码生成的时间" align="center" prop="creationTime" width="180">
+      <el-table-column type="selection" width="55" align="center"/>
+      <el-table-column label="二维码ID" align="center" prop="id"/>
+      <el-table-column label="访客ID" align="center" prop="visitorId"/>
+      <el-table-column label="二维码内容" align="center" prop="qrCode"/>
+      <el-table-column label="创建时间" align="center" prop="creationTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.creationTime, '{y}-{m}-{d}') }}</span>
         </template>
@@ -87,18 +91,20 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['system:qr_code_record:edit']"
-          >修改</el-button>
+          >修改
+          </el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['system:qr_code_record:remove']"
-          >删除</el-button>
+          >删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -107,21 +113,21 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改用于存储访客二维码相关记录的对话框 -->
+    <!-- 添加或修改访客二维码相关记录对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="访客ID，外键，关联到访客信息表，表示该二维码对应的访客" prop="visitorId">
-          <el-input v-model="form.visitorId" placeholder="请输入访客ID，外键，关联到访客信息表，表示该二维码对应的访客" />
+        <el-form-item label="访客ID" prop="visitorId">
+          <el-input v-model="form.visitorId" placeholder="请输入访客ID"/>
         </el-form-item>
-        <el-form-item label="二维码内容，存储二维码的字符串，包含访客的基本信息" prop="qrCode">
-          <el-input v-model="form.qrCode" type="textarea" placeholder="请输入内容" />
+        <el-form-item label="二维码内容" prop="qrCode">
+          <el-input v-model="form.qrCode" type="textarea" placeholder="请输入内容"/>
         </el-form-item>
-        <el-form-item label="创建时间，二维码生成的时间" prop="creationTime">
+        <el-form-item label="创建时间" prop="creationTime">
           <el-date-picker clearable
-            v-model="form.creationTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择创建时间，二维码生成的时间">
+                          v-model="form.creationTime"
+                          type="date"
+                          value-format="yyyy-MM-dd"
+                          placeholder="请选择创建时间">
           </el-date-picker>
         </el-form-item>
       </el-form>
@@ -134,7 +140,13 @@
 </template>
 
 <script>
-import { listQr_code_record, getQr_code_record, delQr_code_record, addQr_code_record, updateQr_code_record } from "@/api/system/qr_code_record";
+import {
+  listQr_code_record,
+  getQr_code_record,
+  delQr_code_record,
+  addQr_code_record,
+  updateQr_code_record
+} from "@/api/system/qr_code_record";
 
 export default {
   name: "Qr_code_record",
@@ -152,7 +164,7 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 用于存储访客二维码相关记录的表格数据
+      // 访客二维码相关记录表格数据
       qr_code_recordList: [],
       // 弹出层标题
       title: "",
@@ -171,10 +183,10 @@ export default {
       // 表单校验
       rules: {
         visitorId: [
-          { required: true, message: "访客ID，外键，关联到访客信息表，表示该二维码对应的访客不能为空", trigger: "blur" }
+          {required: true, message: "访客ID不能为空", trigger: "blur"}
         ],
         qrCode: [
-          { required: true, message: "二维码内容，存储二维码的字符串，包含访客的基本信息不能为空", trigger: "blur" }
+          {required: true, message: "二维码内容不能为空", trigger: "blur"}
         ],
       }
     };
@@ -183,7 +195,7 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询用于存储访客二维码相关记录的列表 */
+    /** 查询访客二维码相关记录列表 */
     getList() {
       this.loading = true;
       listQr_code_record(this.queryParams).then(response => {
@@ -220,14 +232,14 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.id)
-      this.single = selection.length!==1
+      this.single = selection.length !== 1
       this.multiple = !selection.length
     },
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加用于存储访客二维码相关记录的";
+      this.title = "添加访客二维码相关记录";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -236,7 +248,7 @@ export default {
       getQr_code_record(id).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改用于存储访客二维码相关记录的";
+        this.title = "修改访客二维码相关记录";
       });
     },
     /** 提交按钮 */
@@ -262,12 +274,13 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除用于存储访客二维码相关记录的编号为"' + ids + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除编号为"' + ids + '"的数据项？').then(function () {
         return delQr_code_record(ids);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
-      }).catch(() => {});
+      }).catch(() => {
+      });
     },
     /** 导出按钮操作 */
     handleExport() {

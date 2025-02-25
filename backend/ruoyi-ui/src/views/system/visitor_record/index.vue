@@ -1,28 +1,28 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="访客ID，外键，关联到访客信息表，标识审核记录属于哪个访客" prop="visitorId">
+      <el-form-item label="访客ID" prop="visitorId">
         <el-input
           v-model="queryParams.visitorId"
-          placeholder="请输入访客ID，外键，关联到访客信息表，标识审核记录属于哪个访客"
+          placeholder="请输入访客ID"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="审核人ID，外键，关联到用户表，表示审核人的ID" prop="auditorId">
+      <el-form-item label="审核人ID" prop="auditorId">
         <el-input
           v-model="queryParams.auditorId"
-          placeholder="请输入审核人ID，外键，关联到用户表，表示审核人的ID"
+          placeholder="请输入审核人ID"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="审批时间，表示当前审核的时间" prop="approvalTime">
+      <el-form-item label="审批时间" prop="approvalTime">
         <el-date-picker clearable
                         v-model="queryParams.approvalTime"
                         type="date"
                         value-format="yyyy-MM-dd"
-                        placeholder="请选择审批时间，表示当前审核的时间">
+                        placeholder="请选择审批时间">
         </el-date-picker>
       </el-form-item>
       <el-form-item>
@@ -83,17 +83,17 @@
 
     <el-table v-loading="loading" :data="recordList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center"/>
-      <el-table-column label="审核记录ID，主键，唯一标识每条审核记录" align="center" prop="id"/>
-      <el-table-column label="访客ID，外键，关联到访客信息表，标识审核记录属于哪个访客" align="center" prop="visitorId"/>
-      <el-table-column label="审核级别，表示当前审核的级别，一级或二级" align="center" prop="auditLevel"/>
-      <el-table-column label="审核人ID，外键，关联到用户表，表示审核人的ID" align="center" prop="auditorId"/>
-      <el-table-column label="审批状态，表示该级审核员对申请的审批结果" align="center" prop="approvalStatus"/>
-      <el-table-column label="审批时间，表示当前审核的时间" align="center" prop="approvalTime" width="180">
+      <el-table-column label="审核记录ID" align="center" prop="id"/>
+      <el-table-column label="访客ID" align="center" prop="visitorId"/>
+      <el-table-column label="审核级别" align="center" prop="auditLevel"/>
+      <el-table-column label="审核人ID" align="center" prop="auditorId"/>
+      <el-table-column label="审批状态" align="center" prop="approvalStatus"/>
+      <el-table-column label="审批时间" align="center" prop="approvalTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.approvalTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="审批意见，审核员对该申请的具体审批意见" align="center" prop="approvalOpinion"/>
+      <el-table-column label="审批意见" align="center" prop="approvalOpinion"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -127,21 +127,21 @@
     <!-- 添加或修改用于存储访客审核相关记录的对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="访客ID，外键，关联到访客信息表，标识审核记录属于哪个访客" prop="visitorId">
-          <el-input v-model="form.visitorId" placeholder="请输入访客ID，外键，关联到访客信息表，标识审核记录属于哪个访客"/>
+        <el-form-item label="访客ID" prop="visitorId">
+          <el-input v-model="form.visitorId" placeholder="请输入访客ID"/>
         </el-form-item>
-        <el-form-item label="审核人ID，外键，关联到用户表，表示审核人的ID" prop="auditorId">
-          <el-input v-model="form.auditorId" placeholder="请输入审核人ID，外键，关联到用户表，表示审核人的ID"/>
+        <el-form-item label="审核人ID" prop="auditorId">
+          <el-input v-model="form.auditorId" placeholder="请输入审核人ID"/>
         </el-form-item>
-        <el-form-item label="审批时间，表示当前审核的时间" prop="approvalTime">
+        <el-form-item label="审批时间" prop="approvalTime">
           <el-date-picker clearable
                           v-model="form.approvalTime"
                           type="date"
                           value-format="yyyy-MM-dd"
-                          placeholder="请选择审批时间，表示当前审核的时间">
+                          placeholder="请选择审批时间">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="审批意见，审核员对该申请的具体审批意见" prop="approvalOpinion">
+        <el-form-item label="审批意见" prop="approvalOpinion">
           <el-input v-model="form.approvalOpinion" type="textarea" placeholder="请输入内容"/>
         </el-form-item>
       </el-form>

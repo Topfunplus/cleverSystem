@@ -1,28 +1,30 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="访客ID，外键，关联到访客信息表，标识审核记录属于哪个访客" prop="visitorId">
+      <el-form-item label="访客ID" prop="visitorId">
         <el-input
           v-model="queryParams.visitorId"
-          placeholder="请输入访客ID，外键，关联到访客信息表，标识审核记录属于哪个访客"
+          placeholder="请输入访客ID"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="审核人ID，外键，关联到用户表，表示审核人的ID" prop="auditorId">
+      <el-form-item label="审核人ID" prop="auditorId">
         <el-input
           v-model="queryParams.auditorId"
-          placeholder="请输入审核人ID，外键，关联到用户表，表示审核人的ID"
+          placeholder="请输入审核人ID"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="审批时间，表示当前审核的时间" prop="approvalTime">
-        <el-date-picker clearable
+      <el-form-item label="审批时间" prop="approvalTime">
+        <el-date-picker
+          clearable
           v-model="queryParams.approvalTime"
           type="date"
           value-format="yyyy-MM-dd"
-          placeholder="请选择审批时间，表示当前审核的时间">
+          placeholder="请选择审批时间"
+        >
         </el-date-picker>
       </el-form-item>
       <el-form-item>
@@ -40,7 +42,8 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['system:audit_record:add']"
-        >新增</el-button>
+        >新增
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -51,7 +54,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['system:audit_record:edit']"
-        >修改</el-button>
+        >修改
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -62,7 +66,8 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['system:audit_record:remove']"
-        >删除</el-button>
+        >删除
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -72,24 +77,25 @@
           size="mini"
           @click="handleExport"
           v-hasPermi="['system:audit_record:export']"
-        >导出</el-button>
+        >导出
+        </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="audit_recordList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="审核记录ID，主键，唯一标识每条审核记录" align="center" prop="id" />
-      <el-table-column label="访客ID，外键，关联到访客信息表，标识审核记录属于哪个访客" align="center" prop="visitorId" />
-      <el-table-column label="审核级别，表示当前审核的级别，一级或二级" align="center" prop="auditLevel" />
-      <el-table-column label="审核人ID，外键，关联到用户表，表示审核人的ID" align="center" prop="auditorId" />
-      <el-table-column label="审批状态，表示该级审核员对申请的审批结果" align="center" prop="approvalStatus" />
-      <el-table-column label="审批时间，表示当前审核的时间" align="center" prop="approvalTime" width="180">
+      <el-table-column type="selection" width="55" align="center"/>
+      <el-table-column label="审核记录ID" align="center" prop="id"/>
+      <el-table-column label="访客ID" align="center" prop="visitorId"/>
+      <el-table-column label="审核级别" align="center" prop="auditLevel"/>
+      <el-table-column label="审核人ID" align="center" prop="auditorId"/>
+      <el-table-column label="审批状态" align="center" prop="approvalStatus"/>
+      <el-table-column label="审批时间" align="center" prop="approvalTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.approvalTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="审批意见，审核员对该申请的具体审批意见" align="center" prop="approvalOpinion" />
+      <el-table-column label="审批意见" align="center" prop="approvalOpinion"/>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -98,20 +104,22 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['system:audit_record:edit']"
-          >修改</el-button>
+          >修改
+          </el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['system:audit_record:remove']"
-          >删除</el-button>
+          >删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="queryParams.pageNum"
       :limit.sync="queryParams.pageSize"
@@ -121,22 +129,24 @@
     <!-- 添加或修改用于存储访客审核相关记录的对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="访客ID，外键，关联到访客信息表，标识审核记录属于哪个访客" prop="visitorId">
-          <el-input v-model="form.visitorId" placeholder="请输入访客ID，外键，关联到访客信息表，标识审核记录属于哪个访客" />
+        <el-form-item label="访客ID" prop="visitorId">
+          <el-input v-model="form.visitorId" placeholder="请输入访客ID"/>
         </el-form-item>
-        <el-form-item label="审核人ID，外键，关联到用户表，表示审核人的ID" prop="auditorId">
-          <el-input v-model="form.auditorId" placeholder="请输入审核人ID，外键，关联到用户表，表示审核人的ID" />
+        <el-form-item label="审核人ID" prop="auditorId">
+          <el-input v-model="form.auditorId" placeholder="请输入审核人ID"/>
         </el-form-item>
-        <el-form-item label="审批时间，表示当前审核的时间" prop="approvalTime">
-          <el-date-picker clearable
+        <el-form-item label="审批时间" prop="approvalTime">
+          <el-date-picker
+            clearable
             v-model="form.approvalTime"
             type="date"
             value-format="yyyy-MM-dd"
-            placeholder="请选择审批时间，表示当前审核的时间">
+            placeholder="请选择审批时间"
+          >
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="审批意见，审核员对该申请的具体审批意见" prop="approvalOpinion">
-          <el-input v-model="form.approvalOpinion" type="textarea" placeholder="请输入内容" />
+        <el-form-item label="审批意见" prop="approvalOpinion">
+          <el-input v-model="form.approvalOpinion" type="textarea" placeholder="请输入内容"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -148,7 +158,13 @@
 </template>
 
 <script>
-import { listAudit_record, getAudit_record, delAudit_record, addAudit_record, updateAudit_record } from "@/api/system/audit_record";
+import {
+  listAudit_record,
+  getAudit_record,
+  delAudit_record,
+  addAudit_record,
+  updateAudit_record
+} from "@/api/system/audit_record";
 
 export default {
   name: "Audit_record",
@@ -188,16 +204,16 @@ export default {
       // 表单校验
       rules: {
         visitorId: [
-          { required: true, message: "访客ID，外键，关联到访客信息表，标识审核记录属于哪个访客不能为空", trigger: "blur" }
+          {required: true, message: "访客ID，外键，关联到访客信息表，标识审核记录属于哪个访客不能为空", trigger: "blur"}
         ],
         auditLevel: [
-          { required: true, message: "审核级别，表示当前审核的级别，一级或二级不能为空", trigger: "blur" }
+          {required: true, message: "审核级别，表示当前审核的级别，一级或二级不能为空", trigger: "blur"}
         ],
         auditorId: [
-          { required: true, message: "审核人ID，外键，关联到用户表，表示审核人的ID不能为空", trigger: "blur" }
+          {required: true, message: "审核人ID，外键，关联到用户表，表示审核人的ID不能为空", trigger: "blur"}
         ],
         approvalStatus: [
-          { required: true, message: "审批状态，表示该级审核员对申请的审批结果不能为空", trigger: "change" }
+          {required: true, message: "审批状态，表示该级审核员对申请的审批结果不能为空", trigger: "change"}
         ],
       }
     };
@@ -246,7 +262,7 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.id)
-      this.single = selection.length!==1
+      this.single = selection.length !== 1
       this.multiple = !selection.length
     },
     /** 新增按钮操作 */
@@ -288,12 +304,13 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除用于存储访客审核相关记录的编号为"' + ids + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除用于存储访客审核相关记录的编号为"' + ids + '"的数据项？').then(function () {
         return delAudit_record(ids);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
-      }).catch(() => {});
+      }).catch(() => {
+      });
     },
     /** 导出按钮操作 */
     handleExport() {
