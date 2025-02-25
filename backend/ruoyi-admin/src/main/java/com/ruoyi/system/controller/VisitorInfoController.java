@@ -2,6 +2,7 @@ package com.ruoyi.system.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,24 +24,22 @@ import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 用于存储访客相关信息的Controller
- * 
+ *
  * @author ruoyi
  * @date 2025-02-25
  */
 @RestController
-@RequestMapping("/system/info")
-public class VisitorInfoController extends BaseController
-{
+@RequestMapping("/system/visitor_info")
+public class VisitorInfoController extends BaseController {
     @Autowired
     private IVisitorInfoService visitorInfoService;
 
     /**
      * 查询用于存储访客相关信息的列表
      */
-    @PreAuthorize("@ss.hasPermi('system:info:list')")
+    @PreAuthorize("@ss.hasPermi('system:visitor_info:list')")
     @GetMapping("/list")
-    public TableDataInfo list(VisitorInfo visitorInfo)
-    {
+    public TableDataInfo list(VisitorInfo visitorInfo) {
         startPage();
         List<VisitorInfo> list = visitorInfoService.selectVisitorInfoList(visitorInfo);
         return getDataTable(list);
@@ -49,11 +48,10 @@ public class VisitorInfoController extends BaseController
     /**
      * 导出用于存储访客相关信息的列表
      */
-    @PreAuthorize("@ss.hasPermi('system:info:export')")
+    @PreAuthorize("@ss.hasPermi('system:visitor_info:export')")
     @Log(title = "用于存储访客相关信息的", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, VisitorInfo visitorInfo)
-    {
+    public void export(HttpServletResponse response, VisitorInfo visitorInfo) {
         List<VisitorInfo> list = visitorInfoService.selectVisitorInfoList(visitorInfo);
         ExcelUtil<VisitorInfo> util = new ExcelUtil<VisitorInfo>(VisitorInfo.class);
         util.exportExcel(response, list, "用于存储访客相关信息的数据");
@@ -62,43 +60,39 @@ public class VisitorInfoController extends BaseController
     /**
      * 获取用于存储访客相关信息的详细信息
      */
-    @PreAuthorize("@ss.hasPermi('system:info:query')")
+    @PreAuthorize("@ss.hasPermi('system:visitor_info:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
-    {
+    public AjaxResult getInfo(@PathVariable("id") Long id) {
         return success(visitorInfoService.selectVisitorInfoById(id));
     }
 
     /**
      * 新增用于存储访客相关信息的
      */
-    @PreAuthorize("@ss.hasPermi('system:info:add')")
+    @PreAuthorize("@ss.hasPermi('system:visitor_info:add')")
     @Log(title = "用于存储访客相关信息的", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody VisitorInfo visitorInfo)
-    {
+    public AjaxResult add(@RequestBody VisitorInfo visitorInfo) {
         return toAjax(visitorInfoService.insertVisitorInfo(visitorInfo));
     }
 
     /**
      * 修改用于存储访客相关信息的
      */
-    @PreAuthorize("@ss.hasPermi('system:info:edit')")
+    @PreAuthorize("@ss.hasPermi('system:visitor_info:edit')")
     @Log(title = "用于存储访客相关信息的", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody VisitorInfo visitorInfo)
-    {
+    public AjaxResult edit(@RequestBody VisitorInfo visitorInfo) {
         return toAjax(visitorInfoService.updateVisitorInfo(visitorInfo));
     }
 
     /**
      * 删除用于存储访客相关信息的
      */
-    @PreAuthorize("@ss.hasPermi('system:info:remove')")
+    @PreAuthorize("@ss.hasPermi('system:visitor_info:remove')")
     @Log(title = "用于存储访客相关信息的", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
-    {
+    @DeleteMapping("/{ids}")
+    public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(visitorInfoService.deleteVisitorInfoByIds(ids));
     }
 }

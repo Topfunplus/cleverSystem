@@ -2,6 +2,7 @@ package com.ruoyi.system.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,24 +24,22 @@ import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 用于存储访客访问工厂进出记录的Controller
- * 
+ *
  * @author ruoyi
  * @date 2025-02-25
  */
 @RestController
-@RequestMapping("/system/record")
-public class VisitRecordController extends BaseController
-{
+@RequestMapping("/system/visit_record")
+public class VisitRecordController extends BaseController {
     @Autowired
     private IVisitRecordService visitRecordService;
 
     /**
      * 查询用于存储访客访问工厂进出记录的列表
      */
-    @PreAuthorize("@ss.hasPermi('system:record:list')")
+    @PreAuthorize("@ss.hasPermi('system:visit_record:list')")
     @GetMapping("/list")
-    public TableDataInfo list(VisitRecord visitRecord)
-    {
+    public TableDataInfo list(VisitRecord visitRecord) {
         startPage();
         List<VisitRecord> list = visitRecordService.selectVisitRecordList(visitRecord);
         return getDataTable(list);
@@ -49,11 +48,10 @@ public class VisitRecordController extends BaseController
     /**
      * 导出用于存储访客访问工厂进出记录的列表
      */
-    @PreAuthorize("@ss.hasPermi('system:record:export')")
+    @PreAuthorize("@ss.hasPermi('system:visit_record:export')")
     @Log(title = "用于存储访客访问工厂进出记录的", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, VisitRecord visitRecord)
-    {
+    public void export(HttpServletResponse response, VisitRecord visitRecord) {
         List<VisitRecord> list = visitRecordService.selectVisitRecordList(visitRecord);
         ExcelUtil<VisitRecord> util = new ExcelUtil<VisitRecord>(VisitRecord.class);
         util.exportExcel(response, list, "用于存储访客访问工厂进出记录的数据");
@@ -62,10 +60,9 @@ public class VisitRecordController extends BaseController
     /**
      * 获取用于存储访客访问工厂进出记录的详细信息
      */
-    @PreAuthorize("@ss.hasPermi('system:record:query')")
+    @PreAuthorize("@ss.hasPermi('system:visit_record:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
-    {
+    public AjaxResult getInfo(@PathVariable("id") Long id) {
         return success(visitRecordService.selectVisitRecordById(id));
     }
 
@@ -75,8 +72,7 @@ public class VisitRecordController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:record:add')")
     @Log(title = "用于存储访客访问工厂进出记录的", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody VisitRecord visitRecord)
-    {
+    public AjaxResult add(@RequestBody VisitRecord visitRecord) {
         return toAjax(visitRecordService.insertVisitRecord(visitRecord));
     }
 
@@ -86,8 +82,7 @@ public class VisitRecordController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:record:edit')")
     @Log(title = "用于存储访客访问工厂进出记录的", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody VisitRecord visitRecord)
-    {
+    public AjaxResult edit(@RequestBody VisitRecord visitRecord) {
         return toAjax(visitRecordService.updateVisitRecord(visitRecord));
     }
 
@@ -96,9 +91,8 @@ public class VisitRecordController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('system:record:remove')")
     @Log(title = "用于存储访客访问工厂进出记录的", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
-    {
+    @DeleteMapping("/{ids}")
+    public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(visitRecordService.deleteVisitRecordByIds(ids));
     }
 }

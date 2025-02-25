@@ -2,6 +2,7 @@ package com.ruoyi.system.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,24 +24,22 @@ import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 用于存储访客二维码相关记录的Controller
- * 
+ *
  * @author ruoyi
  * @date 2025-02-25
  */
 @RestController
-@RequestMapping("/system/record")
-public class QrCodeRecordController extends BaseController
-{
+@RequestMapping("/system/qr_code_record")
+public class QrCodeRecordController extends BaseController {
     @Autowired
     private IQrCodeRecordService qrCodeRecordService;
 
     /**
      * 查询用于存储访客二维码相关记录的列表
      */
-    @PreAuthorize("@ss.hasPermi('system:record:list')")
+    @PreAuthorize("@ss.hasPermi('system:qr_code_record:list')")
     @GetMapping("/list")
-    public TableDataInfo list(QrCodeRecord qrCodeRecord)
-    {
+    public TableDataInfo list(QrCodeRecord qrCodeRecord) {
         startPage();
         List<QrCodeRecord> list = qrCodeRecordService.selectQrCodeRecordList(qrCodeRecord);
         return getDataTable(list);
@@ -49,11 +48,10 @@ public class QrCodeRecordController extends BaseController
     /**
      * 导出用于存储访客二维码相关记录的列表
      */
-    @PreAuthorize("@ss.hasPermi('system:record:export')")
+    @PreAuthorize("@ss.hasPermi('system:qr_code_record:export')")
     @Log(title = "用于存储访客二维码相关记录的", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, QrCodeRecord qrCodeRecord)
-    {
+    public void export(HttpServletResponse response, QrCodeRecord qrCodeRecord) {
         List<QrCodeRecord> list = qrCodeRecordService.selectQrCodeRecordList(qrCodeRecord);
         ExcelUtil<QrCodeRecord> util = new ExcelUtil<QrCodeRecord>(QrCodeRecord.class);
         util.exportExcel(response, list, "用于存储访客二维码相关记录的数据");
@@ -62,43 +60,39 @@ public class QrCodeRecordController extends BaseController
     /**
      * 获取用于存储访客二维码相关记录的详细信息
      */
-    @PreAuthorize("@ss.hasPermi('system:record:query')")
+    @PreAuthorize("@ss.hasPermi('system:qr_code_record:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
-    {
+    public AjaxResult getInfo(@PathVariable("id") Long id) {
         return success(qrCodeRecordService.selectQrCodeRecordById(id));
     }
 
     /**
      * 新增用于存储访客二维码相关记录的
      */
-    @PreAuthorize("@ss.hasPermi('system:record:add')")
+    @PreAuthorize("@ss.hasPermi('system:qr_code_record:add')")
     @Log(title = "用于存储访客二维码相关记录的", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody QrCodeRecord qrCodeRecord)
-    {
+    public AjaxResult add(@RequestBody QrCodeRecord qrCodeRecord) {
         return toAjax(qrCodeRecordService.insertQrCodeRecord(qrCodeRecord));
     }
 
     /**
      * 修改用于存储访客二维码相关记录的
      */
-    @PreAuthorize("@ss.hasPermi('system:record:edit')")
+    @PreAuthorize("@ss.hasPermi('system:qr_code_record:edit')")
     @Log(title = "用于存储访客二维码相关记录的", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody QrCodeRecord qrCodeRecord)
-    {
+    public AjaxResult edit(@RequestBody QrCodeRecord qrCodeRecord) {
         return toAjax(qrCodeRecordService.updateQrCodeRecord(qrCodeRecord));
     }
 
     /**
      * 删除用于存储访客二维码相关记录的
      */
-    @PreAuthorize("@ss.hasPermi('system:record:remove')")
+    @PreAuthorize("@ss.hasPermi('system:qr_code_record:remove')")
     @Log(title = "用于存储访客二维码相关记录的", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
-    {
+    @DeleteMapping("/{ids}")
+    public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(qrCodeRecordService.deleteQrCodeRecordByIds(ids));
     }
 }
