@@ -103,7 +103,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['system:visitor_info:add']"
+          v-hasPermi="['system:visit_record:add']"
         >新增
         </el-button>
       </el-col>
@@ -115,7 +115,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['system:visitor_info:edit']"
+          v-hasPermi="['system:visit_record:edit']"
         >修改
         </el-button>
       </el-col>
@@ -127,7 +127,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['system:visitor_info:remove']"
+          v-hasPermi="['system:visit_record:remove']"
         >删除
         </el-button>
       </el-col>
@@ -138,7 +138,7 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['system:visitor_info:export']"
+          v-hasPermi="['system:visit_record:export']"
         >导出
         </el-button>
       </el-col>
@@ -203,7 +203,7 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:visitor_info:edit']"
+            v-hasPermi="['system:visit_record:edit']"
           >修改
           </el-button>
           <el-button
@@ -211,7 +211,7 @@
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['system:visitor_info:remove']"
+            v-hasPermi="['system:visit_record:remove']"
           >删除
           </el-button>
         </template>
@@ -316,7 +316,7 @@ import {
   delVisitorInfo,
   addVisitorInfo,
   updateVisitorInfo
-} from "@/api/system/visitor_info";
+} from "@/api/system/visit_record";
 
 export default {
   name: "Info",

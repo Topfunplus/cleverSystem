@@ -1,4 +1,14 @@
 import axios from 'axios'
+import { getToken } from '@/utils/auth'
+// @ts-ignore
+import Swal from 'sweetalert2/dist/sweetalert2.js'
+
+export interface AxiosResponseConfig<T = any> {
+  code: number // 状态码
+  msg: string // 返回消息
+  token?: string // 认证 token
+  data?: T // 数据对象，可选
+}
 
 export function createInstance(url: string, timeout: number) {
   return axios.create({
@@ -15,9 +25,8 @@ const instance = createInstance('http://localhost:5173/api', 5000)
 // 请求拦截器
 instance.interceptors.request.use(
   (config) => {
-    console.log('Request Interceptor - Sending Request:', config)
     // 例如：添加认证 token
-    const token = localStorage.getItem('token') // 假设 token 存储在 localStorage 中
+    const token = getToken()
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
     }
@@ -25,8 +34,13 @@ instance.interceptors.request.use(
     return config
   },
   (error) => {
+    // @ts-ignore
     // 对请求错误做些什么
-    console.error('Request Interceptor - Error:', error)
+    Swal.fire({
+      title: error.message,
+      icon: 'error',
+      draggable: true
+    })
     return Promise.reject(error)
   }
 )
@@ -35,22 +49,17 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
   (response) => {
     // 对响应数据做些什么
-    console.log('Response Interceptor - Received Response:', response.data)
     return response.data // 直接返回响应数据
   },
   (error) => {
-    // 对响应错误做些什么
-    console.error(
-      'Response Interceptor - Error:',
-      error.response ? error.response.data : error.message
-    )
-
-    // 例如：处理 401 未授权错误
-    if (error.response && error.response.status === 401) {
-      console.log('Unauthorized! Redirecting to login...')
-      // 重定向到登录页面
-      window.location.href = '/login'
-    }
+    // @ts-ignore
+    Swal.fire({
+      title: error.message,
+      icon: 'error',
+      draggable: true
+    })
+    // 重定向到登录页面
+    window.location.href = '/login'
 
     return Promise.reject(error)
   }

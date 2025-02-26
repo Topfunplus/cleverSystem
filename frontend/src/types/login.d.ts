@@ -1,11 +1,9 @@
 interface LoginUserInfo {
-  phone: string
-  idCard?: string
+  code: string
+  uuid: string
   password: string
+  phonenumber: string
+  idCard: string
 }
 
-interface RegisterUserInfo extends LoginUserInfo {
-  phone: string
-  idCard: string
-  password: string
-}
+interface RegisterUserInfo extends LoginUserInfo {}

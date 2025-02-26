@@ -29,6 +29,7 @@ const user = {
     SET_ROLES: (state, roles) => {
       state.roles = roles
     },
+    // 设置权限列表
     SET_PERMISSIONS: (state, permissions) => {
       state.permissions = permissions
     }

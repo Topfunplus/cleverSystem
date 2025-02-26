@@ -1,12 +1,22 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { getCaptchaImage } from '@/api/login'
+import { useUserStore } from '@/stores/user'
+import type { AxiosResponseConfig } from '@/utils/http'
+import { useRouter } from 'vue-router'
+// @ts-ignore
+import Swal from 'sweetalert2/dist/sweetalert2.js'
+import { Log } from '@/utils'
 
 const active = ref('login')
+// 登录信息
 const phonenumber = ref('')
+const idCard = ref('')
 const password = ref('')
+// 注册信息
 const registerPhonenumber = ref('')
 const registerPassword = ref('')
+const registeridCard = ref('')
 const confirmPassword = ref('')
 const captcha = ref('')
 const registerCaptcha = ref('')
@@ -15,6 +25,10 @@ const registerCaptchaImg = ref('')
 const uuid = ref('')
 const registerUuid = ref('')
 
+// pinia用户信息
+const userStore = useUserStore()
+// router
+const router = useRouter()
 // 获取验证码
 const getCaptcha = async (isRegister = false) => {
   getCaptchaImage().then((res) => {
@@ -27,7 +41,10 @@ const getCaptcha = async (isRegister = false) => {
         uuid.value = res.uuid
       }
     } else {
-      showToast('获取验证码失败')
+      Swal.fire({
+        icon: 'error',
+        title: res.msg
+      })
     }
   })
 }
@@ -53,41 +70,95 @@ const handleTabChange = (name: string) => {
 }
 
 // 登录接口
-const login = () => {
+async function login() {
   if (!phonenumber.value || !password.value) {
-    showToast('请填写完整信息')
+    Swal.fire({
+      title: '请填写完整信息',
+      icon: 'error',
+      draggable: true
+    })
     return
   }
   if (!captcha.value) {
-    showToast('请输入验证码')
+    Swal.fire({
+      title: '请输入验证码',
+      icon: 'error',
+      draggable: true
+    })
     return
   }
-  console.log('phonenumber:', phonenumber.value)
-  console.log('password:', password.value)
-  console.log('captcha:', captcha.value)
-  console.log('uuid:', uuid.value)
+
+  const loginBody: LoginUserInfo = {
+    phonenumber: phonenumber.value,
+    password: password.value,
+    code: captcha.value,
+    uuid: uuid.value,
+    idCard: idCard.value
+  }
+  const res = await userStore.loginOn(loginBody)
+
+  if (res.code === 200) router.push('/')
 }
 
 // 注册接口
-const register = () => {
+function register() {
   if (!registerPhonenumber.value || !registerPassword.value || !confirmPassword.value) {
-    showToast('请填写完整信息')
+    Swal.fire({
+      title: '请填写完整信息',
+      icon: 'error',
+      draggable: true
+    })
     return
   }
   if (!registerCaptcha.value) {
-    showToast('请输入验证码')
+    Swal.fire({
+      title: '请输入验证码',
+      icon: 'error',
+      draggable: true
+    })
     return
   }
   if (registerPassword.value !== confirmPassword.value) {
-    showToast('两次输入的密码不一致')
+    Swal.fire({
+      title: '两次输入的密码不一致',
+      icon: 'error',
+      draggable: true
+    })
     return
   }
-  console.log('注册信息:', {
-    phonenumber: registerPhonenumber.value,
-    password: registerPassword.value,
-    captcha: registerCaptcha.value,
-    uuid: registerUuid.value
-  })
+
+  // 进行注册
+  userStore
+    .registerOn({
+      phonenumber: registerPhonenumber.value,
+      password: registerPassword.value,
+      code: registerCaptcha.value,
+      uuid: registerUuid.value,
+      idCard: registeridCard.value
+    })
+    .then((res: AxiosResponseConfig) => {
+      if (res.code === 200) {
+        Swal.fire({
+          title: '注册成功!',
+          icon: 'success',
+          draggable: true
+        })
+        active.value = 'login'
+      } else {
+        Swal.fire({
+          title: res.msg,
+          icon: 'error',
+          draggable: true
+        })
+      }
+    })
+    .catch((err: AxiosResponseConfig) => {
+      Swal.fire({
+        title: err.msg,
+        icon: 'error',
+        draggable: true
+      })
+    })
 }
 
 // 切换注册和登录
@@ -98,6 +169,10 @@ const switchToRegister = () => {
 const switchToLogin = () => {
   active.value = 'login'
 }
+
+onMounted(() => {
+  Log.info('您尚未登录，请先登录!')
+})
 </script>
 
 <template>
@@ -113,6 +188,12 @@ const switchToLogin = () => {
                 label="手机号"
                 placeholder="请输入手机号"
                 :rules="[{ required: true, message: '请填写手机号' }]"
+              />
+              <van-field
+                v-model="idCard"
+                label="身份证号"
+                placeholder="请输入身份证号"
+                :rules="[{ required: true, message: '请填写银行卡号' }]"
               />
               <van-field
                 v-model="password"
@@ -132,7 +213,7 @@ const switchToLogin = () => {
                     v-if="captchaImg"
                     :src="captchaImg"
                     class="captcha-img"
-                    @click="refreshCaptcha"
+                    @click="refreshCaptcha(false)"
                     alt="验证码"
                   />
                 </template>
@@ -153,6 +234,12 @@ const switchToLogin = () => {
                 label="手机号"
                 placeholder="请输入手机号"
                 :rules="[{ required: true, message: '请填写手机号' }]"
+              />
+              <van-field
+                v-model="registeridCard"
+                label="身份证号"
+                placeholder="请输入身份证号"
+                :rules="[{ required: true, message: '请填写身份证号' }]"
               />
               <van-field
                 v-model="registerPassword"

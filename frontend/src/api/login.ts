@@ -1,4 +1,4 @@
-import instance from '@/utils/http'
+import instance, { type AxiosResponseConfig } from '@/utils/http'
 
 export function getCaptchaImage(): Promise<{
   msg: string
@@ -13,7 +13,7 @@ export function getCaptchaImage(): Promise<{
   })
 }
 
-export function login(userInfo: LoginUserInfo): Promise<any> {
+export function login(userInfo: LoginUserInfo): Promise<AxiosResponseConfig> {
   return instance.request({
     url: '/login',
     method: 'POST',
@@ -21,7 +21,7 @@ export function login(userInfo: LoginUserInfo): Promise<any> {
   })
 }
 
-export function register(registerInfo: RegisterUserInfo): Promise<any> {
+export function register(registerInfo: RegisterUserInfo): Promise<AxiosResponseConfig> {
   return instance.request({
     url: '/register',
     method: 'POST',

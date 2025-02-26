@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { reactive, ref, watch } from 'vue'
+import { onMounted, reactive, ref, watch } from 'vue'
 import { showConfirmDialog, showDialog } from 'vant'
 import type { FormInstance } from 'vant'
 import AuditResult from '@/components/AuditResult.vue'
 import { AuditStatus } from '@/utils/enum'
+import { Log } from '@/utils'
+
 const active = ref(0)
 const step = ref(0)
 const isFinished = ref(false)
@@ -12,10 +14,7 @@ const formRef = ref<FormInstance | null>(null)
 // 切换tab页
 function onClickTab({ title, disabled }: { title: string; disabled: boolean }) {
   if (disabled) {
-    showDialog({
-      title: '提示',
-      message: '请先填写申请信息'
-    })
+    Log.info('请先按照要求填写申请信息!')
   }
 }
 
@@ -33,7 +32,7 @@ const visitorInfo = reactive<VisitorInfo>({
   visitEndTime: ''
 })
 
-// todo 提交表单
+// 提交表单
 const onSubmit = () => {
   showDialog({
     title: '结果',
@@ -92,7 +91,6 @@ const auditInfo = reactive<AuditInfo>({
   id: 0,
   name: '',
   status: AuditStatus.AUDIT_PASS.text
-
 })
 const auditChooseShow = ref(false)
 const columns: AuditColumn[] = [
@@ -102,9 +100,9 @@ const columns: AuditColumn[] = [
 ]
 const auditPickerValue = ref<string[]>([])
 const onConfirmAudit = ({
-                          selectedValues,
-                          selectedOptions
-                        }: {
+  selectedValues,
+  selectedOptions
+}: {
   selectedValues: []
   selectedOptions: [{ text: string; value: number }]
 }) => {
@@ -114,8 +112,6 @@ const onConfirmAudit = ({
   auditChooseShow.value = false
 }
 
-// 监听tab页切换
-// todo 确认是否要重新填写
 watch(
   () => active.value,
   () => {
@@ -141,6 +137,10 @@ watch(
     immediate: false
   }
 )
+
+onMounted(() => {
+  Log.info('请按照要求填写申请信息!')
+})
 </script>
 
 <template>
@@ -265,7 +265,7 @@ watch(
           </van-cell-group>
           <div style="margin: 16px">
             <van-button round block type="primary" native-type="submit" @click="handleSubmit"
-            >下一步
+              >下一步
             </van-button>
           </div>
         </van-form>
