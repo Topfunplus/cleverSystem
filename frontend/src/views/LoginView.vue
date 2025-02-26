@@ -41,10 +41,7 @@ const getCaptcha = async (isRegister = false) => {
         uuid.value = res.uuid
       }
     } else {
-      Swal.fire({
-        icon: 'error',
-        title: res.msg
-      })
+      Log.error(res.msg)
     }
   })
 }
@@ -72,19 +69,11 @@ const handleTabChange = (name: number) => {
 // 登录接口
 async function login() {
   if (!phonenumber.value || !password.value) {
-    Swal.fire({
-      title: '请填写完整信息',
-      icon: 'error',
-      draggable: true
-    })
+    Log.error('请填写完整信息')
     return
   }
   if (!captcha.value) {
-    Swal.fire({
-      title: '请输入验证码',
-      icon: 'error',
-      draggable: true
-    })
+    Log.error('请输入验证码')
     return
   }
 
@@ -97,7 +86,13 @@ async function login() {
   }
   const res = await userStore.loginOn(loginBody)
 
-  if (res.code === 200) router.push('/')
+  if (res.code === 200) {
+    router.push('/')
+  }
+
+  if (res.code === 500) {
+    Log.error(res.msg)
+  }
 }
 
 // 注册接口

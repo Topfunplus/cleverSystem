@@ -2,23 +2,22 @@ import { defineStore } from 'pinia'
 import { getToken, setToken } from '@/utils/auth'
 import { login, register } from '@/api/login'
 import type { AxiosResponseConfig } from '@/utils/http'
-// @ts-ignore
-import Swal from 'sweetalert2/dist/sweetalert2.js'
+
+import { Log } from '@/utils'
+import { getProfile, type SysUser } from '@/api/user'
 
 interface UserState {
   token: string
-  id: string
   name: string
   avator: string
   roles: []
-  userInfo: any
+  userInfo: SysUser
   permissions: string[]
 }
 
 export const useUserStore = defineStore('user', {
   state: (): UserState => ({
     token: getToken(),
-    id: '',
     name: '',
     avator: '',
     roles: [],
@@ -41,13 +40,14 @@ export const useUserStore = defineStore('user', {
       return new Promise<AxiosResponseConfig>((resolve, reject) => {
         login(loginBody)
           .then((res: AxiosResponseConfig) => {
-            this.setToken(res.token as string)
-            setToken(res.token as string)
-            Swal.fire({
-              title: '登录成功!',
-              icon: 'success',
-              draggable: true
-            })
+            if (res.code === 200) {
+              // 设置token到pinia
+              this.setToken(res.token as string)
+              // 设置id
+              this.setUserInfo({ id: res.userid })
+              setToken(res.token as string)
+              Log.success(res.msg)
+            }
             resolve(res)
           })
           .catch((err: any) => {
@@ -67,8 +67,25 @@ export const useUserStore = defineStore('user', {
           })
       })
     },
-    // 获取用户信息的方法
-    getInfo() {},
+    // 获取当前用户信息的方法
+    getInfo(): Promise<AxiosResponseConfig> {
+      return new Promise((resolve: any, reject: any) => {
+        if (this.token) {
+          getProfile()
+            .then((res: AxiosResponseConfig) => {
+              if (res.code === 200) {
+                console.log(res)
+                resolve(res)
+              } else {
+                reject(res)
+              }
+            })
+            .catch((err) => {
+              reject(err)
+            })
+        }
+      })
+    },
     // 登出方法
     logout() {
       return new Promise((resolve: any): void => {

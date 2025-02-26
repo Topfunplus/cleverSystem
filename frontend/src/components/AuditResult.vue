@@ -8,9 +8,9 @@ import type { TagType } from 'vant/es/tag/types'
 const props = defineProps({
   // 访客信息
   visitorInfo: {
-    type: Object as () => VisitorInfo,
+    type: Object as () => PropsVisitorInfo,
     default: () => ({
-      visitorName: '张三',
+      name: '张三',
       phone: '13800138000',
       idCard: '110101199003077632',
       visitorUnit: '某某科技有限公司',
@@ -45,10 +45,6 @@ const props = defineProps({
 
 watchEffect(() => {
   console.log('Visitor Info:', props.visitorInfo)
-  console.log('Audit Info:', props.auditInfo)
-  console.log('Date Value:', props.dateValue)
-  console.log('QR Code URL:', props.qrcodeUrl)
-  console.log('Visit Duration:', props.visitDuration)
 })
 
 // 审核状态
@@ -57,7 +53,6 @@ const auditStatusTag: ComputedRef<TagType> = computed(() => {
   else if (props.auditInfo.status === AuditStatus.UNAUDITED.text) return `default`
   else return `danger`
 })
-
 
 // 下载处理
 const handleDownload = () => {
@@ -202,7 +197,6 @@ const handleReaudit = () => {
   }
 
   .body {
-
   }
 }
 </style>

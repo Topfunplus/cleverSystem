@@ -48,10 +48,16 @@ public class SysLoginController {
     @PostMapping("/login")
     public AjaxResult login(@RequestBody LoginBody loginBody) {
         AjaxResult ajax = AjaxResult.success();
-        // 生成令牌
-        String token = loginService.login(loginBody.getUsername(), loginBody.getPassword(), loginBody.getCode(),
+
+        // 暂时将手机号设置为用户名 虽然本来设置了但是前端没有传递 这里后端处理
+        if (loginBody.getUsername() == null) {
+            loginBody.setUsername(loginBody.getPhonenumber());
+        }
+        // 这里用手机号替代用户名
+        String[] info = loginService.login(loginBody.getUsername(), loginBody.getPassword(), loginBody.getCode(),
                 loginBody.getUuid());
-        ajax.put(Constants.TOKEN, token);
+        ajax.put(Constants.TOKEN, info[0]);
+        ajax.put(Constants.JWT_USERID, info[1]);
         return ajax;
     }
 

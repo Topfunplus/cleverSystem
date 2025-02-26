@@ -2,26 +2,26 @@ import instance, { type AxiosResponseConfig } from '@/utils/http'
 
 // 后端对象定义
 export interface VisitorInfoDomain {
-  id?: number | null;
-  name: string | null;
-  phone: string | null;
-  idCard: string | null;
-  visitorUnit: string | null;
-  visitReason: string | null;
-  idCardFrontImage: string | null;
-  idCardBackImage: string | null;
-  faceImage: string | null;
-  isCar?: number | null;
-  carPlate?: string | null;
-  visitTime: string | null;
-  visitDuration: number | null;
-  requestTime: string | null;
-  status: string | null;
+  id?: number | null
+  name?: string | null
+  phone?: string | null
+  idCard?: string | null
+  visitorUnit?: string | null
+  visitReason?: string | null
+  idCardFrontImage?: string | null
+  idCardBackImage?: string | null
+  faceImage?: string | null
+  isCar?: number | null
+  carPlate?: string | null
+  visitTime?: string | null
+  visitDuration?: number | null
+  requestTime?: string | null
+  status?: string | null
   // 审核意见相关
-  firstApprovalTime?: string | null;
-  firstApprovalOpinion?: string | null;
-  secondApprovalTime?: string | null;
-  secondApprovalOpinion?: string | null;
+  firstApprovalTime?: string | null
+  firstApprovalOpinion?: string | null
+  secondApprovalTime?: string | null
+  secondApprovalOpinion?: string | null
 }
 
 export function listVisitorInfo(query: VisitorInfoDomain): Promise<AxiosResponseConfig> {

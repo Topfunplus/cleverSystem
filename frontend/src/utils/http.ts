@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { getToken } from '@/utils/auth'
+import { getToken, removeToken } from '@/utils/auth'
 // @ts-ignore
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import { Log } from '@/utils/index'
@@ -8,7 +8,9 @@ export interface AxiosResponseConfig<T = any> {
   code: number // 状态码
   msg: string // 返回消息
   token?: string // 认证 token
+  userid?: number // 用户 id
   data?: T // 数据对象，可选
+  rows?: T[] // 数据对象，可选
 }
 
 export function createInstance(url: string, timeout: number) {
@@ -28,9 +30,13 @@ instance.interceptors.request.use(
   (config) => {
     // 例如：添加认证 token
     const token = getToken()
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`
+
+    if (token == `null` || token == 'undefined' || token == '') {
+      Log.error(`登录已过期，请重新登录`)
+      removeToken()
+      return Promise.reject(`登录已过期，请重新登录`)
     }
+    config.headers.Authorization = `Bearer ${token}`
 
     return config
   },

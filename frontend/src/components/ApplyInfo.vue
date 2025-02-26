@@ -1,19 +1,25 @@
+在你提供的代码中，`visitorInfo` 是一个 `ref` 对象，访问其属性时需要通过 `.value`
+来获取实际的值。以下是修改了所有未使用 `.value` 访问 `visitorInfo` 属性的代码： ```vue
 <script setup lang="ts">
-import { nextTick, onMounted, reactive, ref, watch } from 'vue'
-import { showConfirmDialog, showDialog } from 'vant'
+import { computed, nextTick, onMounted, reactive, ref, watch } from 'vue'
 import type { FormInstance } from 'vant'
+import { showConfirmDialog } from 'vant'
 import AuditResult from '@/components/AuditResult.vue'
 import { AuditStatus } from '@/utils/enum'
 import { Log } from '@/utils'
 import _ from 'lodash'
 import { uploadBatch } from '@/api/upload'
-import { addVisitorInfo, type VisitorInfoDomain } from '@/api/visitor'
+import { addVisitorInfo, listVisitorInfo, type VisitorInfoDomain } from '@/api/visitor'
 import dayjs from 'dayjs'
+import { listUser, type SysUser } from '@/api/user'
+import { useUserStore } from '@/stores/user'
+import type { AxiosResponseConfig } from '@/utils/http'
 
 const active = ref(0)
 const step = ref(0)
 const isFinished = ref(false)
 const formRef = ref<FormInstance | null>(null)
+const userStore = useUserStore()
 
 // 切换tab页
 function onClickTab({ title, disabled }: { title: string; disabled: boolean }) {
@@ -23,7 +29,7 @@ function onClickTab({ title, disabled }: { title: string; disabled: boolean }) {
 }
 
 // 访客的信息
-const visitorInfo = reactive<VisitorInfo>({
+let visitorInfo = ref<VisitorInfo>({
   visitorName: '',
   phone: '',
   idCard: '',
@@ -36,6 +42,15 @@ const visitorInfo = reactive<VisitorInfo>({
   visitEndTime: ''
 })
 
+// 传给子组件展示的信息
+let propsVisitorInfo = ref<PropsVisitorInfo>({
+  visitorName: '',
+  phone: '',
+  idCard: '',
+  visitorUnit: '',
+  visitReason: '',
+  visitTime: ''
+})
 
 // 选择时间确认
 // 时间展示用
@@ -54,8 +69,8 @@ function handleChooseDuration() {
 }
 
 const onConfirmRange = () => {
-  visitorInfo.visitStartTime = `${startDate.value.join('/')}`
-  visitorInfo.visitEndTime = `${endDate.value.join('/')}`
+  visitorInfo.value.visitStartTime = `${startDate.value.join('/')}`
+  visitorInfo.value.visitEndTime = `${endDate.value.join('/')}`
   dateValue.value = `${startDate.value.join('/')} 至 ${endDate.value.join('/')}`
   showPicker.value = false
 }
@@ -82,21 +97,16 @@ async function handleSubmit() {
 const auditInfo = reactive<AuditInfo>({
   id: 0,
   name: '',
-  status: AuditStatus.AUDIT_PASS.text
+  status: AuditStatus.UNAUDITED.text
 })
 
-
 const auditChooseShow = ref(false)
-const columns: AuditColumn[] = [
-  { text: '张明测试1', value: 1 },
-  { text: '张明测试2', value: 2 },
-  { text: '张明测试3', value: 2 }
-]
+const columns = ref<AuditColumn[]>([])
 const auditPickerValue = ref<string[]>([])
 const onConfirmAudit = ({
-                          selectedValues,
-                          selectedOptions
-                        }: {
+  selectedValues,
+  selectedOptions
+}: {
   selectedValues: []
   selectedOptions: [{ text: string; value: number }]
 }) => {
@@ -114,16 +124,16 @@ watch(
         title: '提示',
         message: '是否要重新填写访客申请信息?'
       }).then(() => {
-        visitorInfo.visitorName = ''
-        visitorInfo.phone = ''
-        visitorInfo.idCard = ''
-        visitorInfo.visitorUnit = ''
-        visitorInfo.visitReason = ''
-        visitorInfo.cardImages = []
-        visitorInfo.faceImage = []
-        visitorInfo.visitTime = ''
-        visitorInfo.visitStartTime = ''
-        visitorInfo.visitEndTime = ''
+        visitorInfo.value.visitorName = ''
+        visitorInfo.value.phone = ''
+        visitorInfo.value.idCard = ''
+        visitorInfo.value.visitorUnit = ''
+        visitorInfo.value.visitReason = ''
+        visitorInfo.value.cardImages = []
+        visitorInfo.value.faceImage = []
+        visitorInfo.value.visitTime = ''
+        visitorInfo.value.visitStartTime = ''
+        visitorInfo.value.visitEndTime = ''
       })
     }
   },
@@ -132,64 +142,123 @@ watch(
   }
 )
 
-onMounted(() => {
-  Log.info('请按照要求填写申请信息!')
+// 获取个人信息 展示在最上方
+function getProfile() {
+  return new Promise((resolve: any) => {
+    userStore.getInfo().then((res: AxiosResponseConfig) => {
+      userStore.setUserInfo(res.data)
+      if (res.data.phonenumber) {
+        visitorInfo.value.phone = res.data.phonenumber
+      }
+      resolve()
+    })
+  })
+}
 
-  // 获取审核人的信息 这里后端 给访客 和 审核人 设置为一个部门 他们可以互相具有查看权限
-  // 这样 每次新注册的用户 默认分配到和审核人在一个部门
-  // 审核人默认都在 访客和审核人范围 这个部门
+// 获取审核人的信息 这里后端 给访客 和 审核人 设置为一个部门 他们可以互相具有查看权限
+// 这样 每次新注册的用户 默认分配到和审核人在一个部门
+// 审核人默认都在 访客和审核人范围 这个部门
+function getAuditList() {
+  const query: SysUser = {}
+  return new Promise((resolve: any) => {
+    listUser(query).then((res: any) => {
+      const auditUsers = res.rows.filter(
+        (item: SysUser) => item.userId !== userStore.userInfo.userId
+      )
+      columns.value = auditUsers.map((item: SysUser) => {
+        return {
+          text: item.nickName,
+          value: item.userId
+        }
+      })
+      resolve()
+    })
+  })
+}
 
+async function getBaseInfo() {
+  // 获取审核人的信息
+  await getAuditList()
+  // 获取个人信息
+  await getProfile()
+}
+
+onMounted(async () => {
+  try {
+    await getBaseInfo()
+    const body: VisitorInfoDomain = { phone: visitorInfo.value.phone }
+
+    // 先获取一次 如果已经有了审核记录 那么就直接展示
+    listVisitorInfo(body).then((res: AxiosResponseConfig) => {
+      if (res.rows && res.rows.length > 0) {
+        Log.success('您已经有了申请记录')
+        propsVisitorInfo.value = res.rows[0]
+        // 姓名需要单独处理一下 因为后端是name
+        propsVisitorInfo.value.visitorName = res.rows[0].name
+        isFinished.value = true
+        nextTick(() => {
+          active.value = 1
+          step.value = 1
+        })
+      } else {
+        Log.info('请按照要求填写申请信息!')
+      }
+    })
+  } catch (err) {
+    Log.error(`内部发生错误` + err)
+  }
 })
 
 // 提交表单
 const onSubmit = () => {
   // 数据库存值 审核状态为审核中
-  const files = _.concat(visitorInfo.cardImages, visitorInfo.faceImage)
+  const files = _.concat(visitorInfo.value.cardImages, visitorInfo.value.faceImage)
   const fileList = files.map((item: any) => {
     return item.file
   })
   // 先调用批量上传接口 把图片存到服务器 拿到地址
-  uploadBatch(fileList).then((res: { msg: string, urls: string, code: number, } & unknown | undefined) => {
-    // 拿到urls以后 分割一下
-    let urls: string[] = res?.urls.split(',') as string[]
-    // 前两项是身份证正反面 然后最后一张是人脸照片
-    visitorInfo.cardImages = urls.slice(0, 2)
-    visitorInfo.faceImage = urls.slice(2, 3)
+  uploadBatch(fileList).then(
+    (res: ({ msg: string; urls: string; code: number } & unknown) | undefined) => {
+      // 拿到urls以后 分割一下
+      let urls: string[] = res?.urls.split(',') as string[]
+      // 前两项是身份证正反面 然后最后一张是人脸照片
+      visitorInfo.value.cardImages = urls.slice(0, 2)
+      visitorInfo.value.faceImage = urls.slice(2, 3)
 
-    // 拿到开始访客时间 和结束访客时间 计算差额
-    const startTime = dayjs(visitorInfo.visitStartTime).format('YYYY-MM-DD HH:mm:ss')
-    const endTime = dayjs(visitorInfo.visitEndTime)
+      // 拿到开始访客时间 和结束访客时间 计算差额
+      const startTime = dayjs(visitorInfo.value.visitStartTime).format('YYYY-MM-DD HH:mm:ss')
+      const endTime = dayjs(visitorInfo.value.visitEndTime)
 
-    // 计算差额
-    const duration = endTime.diff(dayjs(startTime), 'day')
-    const body: VisitorInfoDomain = {
-      name: visitorInfo.visitorName,
-      phone: visitorInfo.phone,
-      idCard: visitorInfo.idCard,
-      visitorUnit: visitorInfo.visitorUnit,
-      visitReason: visitorInfo.visitReason,
-      idCardFrontImage: visitorInfo.cardImages[0],
-      idCardBackImage: visitorInfo.cardImages[1],
-      faceImage: visitorInfo.faceImage[0],
-      visitTime: startTime,
-      visitDuration: duration,
-      requestTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-      status: AuditStatus.UNAUDITED.text
-    }
-    // 然后调用添加访客信息的接口
-    addVisitorInfo(body).then(res => {
-      Log.info('添加访客信息成功')
-      // 先解除禁用
-      isFinished.value = true
-      nextTick(() => {
-        // 展示用户的申请信息
-        active.value = 1
-        step.value = 1
+      // 计算差额
+      const duration = endTime.diff(dayjs(startTime), 'day')
+      const body: VisitorInfoDomain = {
+        name: visitorInfo.value.visitorName,
+        phone: visitorInfo.value.phone,
+        idCard: visitorInfo.value.idCard,
+        visitorUnit: visitorInfo.value.visitorUnit,
+        visitReason: visitorInfo.value.visitReason,
+        idCardFrontImage: visitorInfo.value.cardImages[0],
+        idCardBackImage: visitorInfo.value.cardImages[1],
+        faceImage: visitorInfo.value.faceImage[0],
+        visitTime: startTime,
+        visitDuration: duration,
+        requestTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+        status: AuditStatus.UNAUDITED.text
+      }
+      // 然后调用添加访客信息的接口
+      addVisitorInfo(body).then((res) => {
+        Log.info('添加访客信息成功')
+        // 先解除禁用
+        isFinished.value = true
+        nextTick(() => {
+          // 展示用户的申请信息
+          active.value = 1
+          step.value = 1
+        })
       })
-    })
-  })
+    }
+  )
 }
-
 </script>
 
 <template>
@@ -199,6 +268,12 @@ const onSubmit = () => {
       <van-step>申请进度</van-step>
       <van-step>查看审核结果</van-step>
     </van-steps>
+    <van-contact-card
+      type="edit"
+      :name="propsVisitorInfo.visitorName"
+      :tel="propsVisitorInfo.phone"
+      :editable="false"
+    />
     <van-tabs v-model:active="active" @click-tab="onClickTab">
       <van-tab title="填写申请信息">
         <van-form @submit="onSubmit" ref="form" name="user">
@@ -314,13 +389,13 @@ const onSubmit = () => {
           </van-cell-group>
           <div style="margin: 16px">
             <van-button round block type="primary" native-type="submit" @click="handleSubmit"
-            >下一步
+              >下一步
             </van-button>
           </div>
         </van-form>
       </van-tab>
       <van-tab title="申请信息预览" :disabled="!isFinished">
-        <AuditResult :visitorInfo="visitorInfo" :auditInfo="auditInfo"></AuditResult>
+        <AuditResult :visitorInfo="propsVisitorInfo" :auditInfo="auditInfo"></AuditResult>
       </van-tab>
     </van-tabs>
   </div>

@@ -12,6 +12,15 @@ interface VisitorInfo {
   visitEndTime: string
 }
 
+interface PropsVisitorInfo {
+  visitorName: ''
+  phone: ''
+  idCard: ''
+  visitorUnit: ''
+  visitReason: ''
+  visitTime: ''
+}
+
 // 申请列信息
 interface AuditColumn {
   text: string // 值
@@ -21,6 +30,6 @@ interface AuditColumn {
 // 审核人信息 传入id和name
 interface AuditInfo {
   id: number
-  name: string,
+  name: string
   status: string
 }

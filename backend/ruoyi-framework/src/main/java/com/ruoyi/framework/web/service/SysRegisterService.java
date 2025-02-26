@@ -39,13 +39,15 @@ public class SysRegisterService {
      */
     public String register(RegisterBody registerBody) {
         String msg = "", password = registerBody.getPassword();
+
+        // 创建一个新的系统用户对象
         SysUser sysUser = new SysUser();
 
         // 这里特殊 用户名设置为手机号
         String username = registerBody.getPhonenumber();
 
         // 用户名设置为手机号
-        sysUser.setUserName(registerBody.getPhonenumber());
+        sysUser.setUserName(username);
 
         // 验证码开关
         boolean captchaEnabled = configService.selectCaptchaEnabled();
@@ -61,7 +63,9 @@ public class SysRegisterService {
         } else if (!userService.checkUserNameUnique(sysUser)) {
             msg = "保存用户'" + username + "'失败，注册账号已存在";
         } else {
-            // 设置用户名为手机号
+            // 设置手机号
+            sysUser.setPhonenumber(username);
+            // 设置昵称
             sysUser.setNickName(registerBody.getPhonenumber());
             // 加密后存数据库
             sysUser.setPassword(SecurityUtils.encryptPassword(password));

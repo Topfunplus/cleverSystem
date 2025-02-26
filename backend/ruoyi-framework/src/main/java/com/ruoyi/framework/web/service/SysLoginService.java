@@ -30,6 +30,8 @@ import com.ruoyi.framework.security.context.AuthenticationContextHolder;
 import com.ruoyi.system.service.ISysConfigService;
 import com.ruoyi.system.service.ISysUserService;
 
+import java.lang.reflect.Array;
+
 /**
  * 登录校验方法
  *
@@ -61,7 +63,7 @@ public class SysLoginService {
      * @param uuid     唯一标识
      * @return 结果
      */
-    public String login(String username, String password, String code, String uuid) {
+    public String[] login(String username, String password, String code, String uuid) {
         // 验证码校验
         validateCaptcha(username, code, uuid);
         // 登录前置校验 这里换成了手机号  不要再用用户名了
@@ -88,7 +90,7 @@ public class SysLoginService {
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
         recordLoginInfo(loginUser.getUserId());
         // 生成token
-        return tokenService.createToken(loginUser);
+        return new String[]{tokenService.createToken(loginUser), String.valueOf(loginUser.getUserId())};
     }
 
     /**

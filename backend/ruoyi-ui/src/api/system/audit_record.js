@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 
 // 查询用于存储访客审核相关记录的列表
-export function listAudit_record(query) {
+export function listAuditRecord(query) {
   return request({
     url: '/system/audit_record/list',
     method: 'get',
@@ -10,7 +10,7 @@ export function listAudit_record(query) {
 }
 
 // 查询用于存储访客审核相关记录的详细
-export function getAudit_record(id) {
+export function getAuditRecord(id) {
   return request({
     url: '/system/audit_record/' + id,
     method: 'get'
@@ -18,7 +18,7 @@ export function getAudit_record(id) {
 }
 
 // 新增用于存储访客审核相关记录的
-export function addAudit_record(data) {
+export function addAuditRecord(data) {
   return request({
     url: '/system/audit_record',
     method: 'post',
@@ -27,7 +27,7 @@ export function addAudit_record(data) {
 }
 
 // 修改用于存储访客审核相关记录的
-export function updateAudit_record(data) {
+export function updateAuditRecord(data) {
   return request({
     url: '/system/audit_record',
     method: 'put',
@@ -36,7 +36,7 @@ export function updateAudit_record(data) {
 }
 
 // 删除用于存储访客审核相关记录的
-export function delAudit_record(id) {
+export function delAuditRecord(id) {
   return request({
     url: '/system/audit_record/' + id,
     method: 'delete'

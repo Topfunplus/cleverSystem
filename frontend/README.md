@@ -1,39 +1,15 @@
-# frontend
+***表单登录，人机防御（验证码）***
 
-This template should help get you started developing with Vue 3 in Vite.
+***不自动填，加一个人机防御***
 
-## Recommended IDE Setup
+***登录注册***
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+***除了电子照片 其他信息都要算入二维码里***
 
-## Type Support for `.vue` Imports in TS
+***界面包含 姓名 手机号 身份证号 访客时间 精确到天 最长不超过七天 来访单位 到访理由 身份证正反面照片 人脸照片
+一级审核人选择（审核人固定，或者后台录入） 二级不做了 到访位置先不做（一个选项，二道门一道门，先预留出来）***
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Type-Check, Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
+***需要一个审核，审核人审核，审核完 ，访客下面显示批准时间，审批意见 （是否同意+签字
+），申请时间和批准时间分开，以批准时间为准，访客上面是基本信息。可以用表格的形式展示，一开始是空的，后面可以填上，审核意见（包含电子签名）
+审批时间 ，最下面放一张二维码，然后传递信息到闸机，二维码内放置除了图片之外的信息（所有图片不存二维码，只存文字内容），可以先做明文的，后期做私文的，只要私钥就行
+简单加密方式，必须得解密，照片以别的形式再采集出来***
