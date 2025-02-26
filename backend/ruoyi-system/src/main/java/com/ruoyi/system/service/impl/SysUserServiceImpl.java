@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import javax.validation.Validator;
 
 import com.ruoyi.common.core.domain.entity.SysDept;
+import com.ruoyi.system.service.ISysRoleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,7 @@ import com.ruoyi.system.service.ISysUserService;
 public class SysUserServiceImpl implements ISysUserService {
     private static final Logger log = LoggerFactory.getLogger(SysUserServiceImpl.class);
 
+
     @Autowired
     private SysUserMapper userMapper;
 
@@ -52,7 +54,7 @@ public class SysUserServiceImpl implements ISysUserService {
     private SysPostMapper postMapper;
 
     @Autowired
-    private SysUserRoleMapper userRoleMapper;
+    private SysUserRoleMapper userRoleMapper;    // 注入角色处理服务 用户给新用户分配角色 新用户默认为访客角色
 
     @Autowired
     private SysUserPostMapper userPostMapper;
@@ -259,10 +261,20 @@ public class SysUserServiceImpl implements ISysUserService {
     public boolean registerUser(SysUser user) {
         // 新注册的用户 默认是普通用户 也就是访客角色 访客设置部门id为 200 访客与审核人范围 暂时用部门代替权限
         // 审核人全部用 访客和审核人范围这个部门代替
+
+        // todo 部门id 写死了
         user.setDeptId(200L);
 
         int count = userMapper.insertUser(user);
 
+        // 进行授权
+        SysUserRole userRole = new SysUserRole();
+        userRole.setUserId(user.getUserId());
+        // 设置用户的角色为访客角色
+        userRole.setRoleId(101L);
+        List<SysUserRole> list = new ArrayList<>();
+        list.add(userRole);
+        userRoleMapper.batchUserRole(list);
 
         return count > 0;
     }
