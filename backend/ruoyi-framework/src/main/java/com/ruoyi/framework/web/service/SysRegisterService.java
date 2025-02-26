@@ -65,7 +65,15 @@ public class SysRegisterService {
             sysUser.setNickName(registerBody.getPhonenumber());
             // 加密后存数据库
             sysUser.setPassword(SecurityUtils.encryptPassword(password));
+
+            // 注册用户
             boolean regFlag = userService.registerUser(sysUser);
+
+            // 新的用户默认是普通用户权限
+            if (regFlag) {
+                AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.REGISTER, MessageUtils.message("user.register.success")));
+            }
+
             if (!regFlag) {
                 msg = "注册失败,请联系系统管理人员";
             }
