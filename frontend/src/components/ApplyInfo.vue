@@ -79,6 +79,7 @@ const auditShow = ref(false)
 async function handleSubmit() {
   if (formRef.value) {
     formRef.value.validate('user').then(() => {
+      // 发送请求 然后执行相关操作
       auditShow.value = true
       active.value = 1
       step.value++
