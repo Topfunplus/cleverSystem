@@ -52,7 +52,7 @@ watchEffect(() => {
 })
 
 // 审核状态
-const auditStatusTag:ComputedRef<TagType> = computed(() => {
+const auditStatusTag: ComputedRef<TagType> = computed(() => {
   if (props.auditInfo.status === AuditStatus.AUDIT_PASS.text) return `success`
   else if (props.auditInfo.status === AuditStatus.UNAUDITED.text) return `default`
   else return `danger`

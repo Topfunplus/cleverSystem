@@ -61,30 +61,30 @@ public class SysLoginService {
      * @param uuid     唯一标识
      * @return 结果
      */
-    public String login(String phonenumber, String password, String code, String uuid) {
+    public String login(String username, String password, String code, String uuid) {
         // 验证码校验
-        validateCaptcha(phonenumber, code, uuid);
+        validateCaptcha(username, code, uuid);
         // 登录前置校验 这里换成了手机号  不要再用用户名了
-        loginPreCheck(phonenumber, password);
+        loginPreCheck(username, password);
         // 用户验证
         Authentication authentication = null;
         try {
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(phonenumber, password);
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
             AuthenticationContextHolder.setContext(authenticationToken);
             // 该方法会去调用UserDetailsServiceImpl.loadUserByUsername
             authentication = authenticationManager.authenticate(authenticationToken);
         } catch (Exception e) {
             if (e instanceof BadCredentialsException) {
-                AsyncManager.me().execute(AsyncFactory.recordLogininfor(phonenumber, Constants.LOGIN_FAIL, MessageUtils.message("user.password.not.match")));
+                AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("user.password.not.match")));
                 throw new UserPasswordNotMatchException();
             } else {
-                AsyncManager.me().execute(AsyncFactory.recordLogininfor(phonenumber, Constants.LOGIN_FAIL, e.getMessage()));
+                AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, e.getMessage()));
                 throw new ServiceException(e.getMessage());
             }
         } finally {
             AuthenticationContextHolder.clearContext();
         }
-        AsyncManager.me().execute(AsyncFactory.recordLogininfor(phonenumber, Constants.LOGIN_SUCCESS, MessageUtils.message("user.login.success")));
+        AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_SUCCESS, MessageUtils.message("user.login.success")));
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
         recordLoginInfo(loginUser.getUserId());
         // 生成token
@@ -122,28 +122,23 @@ public class SysLoginService {
      * @param username 用户名
      * @param password 用户密码
      */
-    public void loginPreCheck(String phonenumber, String password) {
+    public void loginPreCheck(String username, String password) {
         // 用户名或密码为空 错误
-        if (StringUtils.isEmpty(phonenumber) || StringUtils.isEmpty(password)) {
-            AsyncManager.me().execute(AsyncFactory.recordLogininfor(phonenumber, Constants.LOGIN_FAIL, MessageUtils.message("not.null")));
-            throw new UserNotExistsException();
-        }
-        // 校验手机号
-        if (phonenumber.length() != 11) {
-            AsyncManager.me().execute(AsyncFactory.recordLogininfor(phonenumber, Constants.LOGIN_FAIL, MessageUtils.message("user.phonenumber.not.match")));
+        if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
+            AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("not.null")));
             throw new UserNotExistsException();
         }
         // 密码如果不在指定范围内 错误
         if (password.length() < UserConstants.PASSWORD_MIN_LENGTH
                 || password.length() > UserConstants.PASSWORD_MAX_LENGTH) {
-            AsyncManager.me().execute(AsyncFactory.recordLogininfor(phonenumber, Constants.LOGIN_FAIL, MessageUtils.message("user.password.not.match")));
+            AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("user.password.not.match")));
             throw new UserPasswordNotMatchException();
         }
 
         // IP黑名单校验
         String blackStr = configService.selectConfigByKey("sys.login.blackIPList");
         if (IpUtils.isMatchedIp(blackStr, IpUtils.getIpAddr())) {
-            AsyncManager.me().execute(AsyncFactory.recordLogininfor(phonenumber, Constants.LOGIN_FAIL, MessageUtils.message("login.blocked")));
+            AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("login.blocked")));
             throw new BlackListException();
         }
     }

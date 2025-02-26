@@ -5,8 +5,8 @@ interface VisitorInfo {
   idCard: string
   visitorUnit: string
   visitReason: string
-  cardImages: []
-  faceImage: []
+  cardImages: string[]
+  faceImage: string[]
   visitTime: string
   visitStartTime: string
   visitEndTime: string

@@ -1,10 +1,14 @@
 <script setup lang="ts">
-import { onMounted, reactive, ref, watch } from 'vue'
+import { nextTick, onMounted, reactive, ref, watch } from 'vue'
 import { showConfirmDialog, showDialog } from 'vant'
 import type { FormInstance } from 'vant'
 import AuditResult from '@/components/AuditResult.vue'
 import { AuditStatus } from '@/utils/enum'
 import { Log } from '@/utils'
+import _ from 'lodash'
+import { uploadBatch } from '@/api/upload'
+import { addVisitorInfo, type VisitorInfoDomain } from '@/api/visitor'
+import dayjs from 'dayjs'
 
 const active = ref(0)
 const step = ref(0)
@@ -32,18 +36,6 @@ const visitorInfo = reactive<VisitorInfo>({
   visitEndTime: ''
 })
 
-// 提交表单
-const onSubmit = () => {
-  showDialog({
-    title: '结果',
-    message: '提交申请成功'
-  }).then(() => {
-    active.value = 1
-    isFinished.value = true
-    step.value = 1
-    // 数据库存值 审核状态为审核中
-  })
-}
 
 // 选择时间确认
 // 时间展示用
@@ -92,6 +84,8 @@ const auditInfo = reactive<AuditInfo>({
   name: '',
   status: AuditStatus.AUDIT_PASS.text
 })
+
+
 const auditChooseShow = ref(false)
 const columns: AuditColumn[] = [
   { text: '张明测试1', value: 1 },
@@ -100,9 +94,9 @@ const columns: AuditColumn[] = [
 ]
 const auditPickerValue = ref<string[]>([])
 const onConfirmAudit = ({
-  selectedValues,
-  selectedOptions
-}: {
+                          selectedValues,
+                          selectedOptions
+                        }: {
   selectedValues: []
   selectedOptions: [{ text: string; value: number }]
 }) => {
@@ -140,7 +134,62 @@ watch(
 
 onMounted(() => {
   Log.info('请按照要求填写申请信息!')
+
+  // 获取审核人的信息 这里后端 给访客 和 审核人 设置为一个部门 他们可以互相具有查看权限
+  // 这样 每次新注册的用户 默认分配到和审核人在一个部门
+  // 审核人默认都在 访客和审核人范围 这个部门
+
 })
+
+// 提交表单
+const onSubmit = () => {
+  // 数据库存值 审核状态为审核中
+  const files = _.concat(visitorInfo.cardImages, visitorInfo.faceImage)
+  const fileList = files.map((item: any) => {
+    return item.file
+  })
+  // 先调用批量上传接口 把图片存到服务器 拿到地址
+  uploadBatch(fileList).then((res: { msg: string, urls: string, code: number, } & unknown | undefined) => {
+    // 拿到urls以后 分割一下
+    let urls: string[] = res?.urls.split(',') as string[]
+    // 前两项是身份证正反面 然后最后一张是人脸照片
+    visitorInfo.cardImages = urls.slice(0, 2)
+    visitorInfo.faceImage = urls.slice(2, 3)
+
+    // 拿到开始访客时间 和结束访客时间 计算差额
+    const startTime = dayjs(visitorInfo.visitStartTime).format('YYYY-MM-DD HH:mm:ss')
+    const endTime = dayjs(visitorInfo.visitEndTime)
+
+    // 计算差额
+    const duration = endTime.diff(dayjs(startTime), 'day')
+    const body: VisitorInfoDomain = {
+      name: visitorInfo.visitorName,
+      phone: visitorInfo.phone,
+      idCard: visitorInfo.idCard,
+      visitorUnit: visitorInfo.visitorUnit,
+      visitReason: visitorInfo.visitReason,
+      idCardFrontImage: visitorInfo.cardImages[0],
+      idCardBackImage: visitorInfo.cardImages[1],
+      faceImage: visitorInfo.faceImage[0],
+      visitTime: startTime,
+      visitDuration: duration,
+      requestTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+      status: AuditStatus.UNAUDITED.text
+    }
+    // 然后调用添加访客信息的接口
+    addVisitorInfo(body).then(res => {
+      Log.info('添加访客信息成功')
+      // 先解除禁用
+      isFinished.value = true
+      nextTick(() => {
+        // 展示用户的申请信息
+        active.value = 1
+        step.value = 1
+      })
+    })
+  })
+}
+
 </script>
 
 <template>
@@ -203,7 +252,7 @@ onMounted(() => {
             <van-field name="cardImages" label="身份证正反面照片">
               <template #input>
                 <van-uploader
-                  v-model="visitorInfo.cardImages"
+                  v-model="visitorInfo.cardImages as any"
                   :max-count="2"
                   :rules="[{ required: true, message: '请上传身份证正反面照片' }]"
                 />
@@ -212,7 +261,7 @@ onMounted(() => {
             <van-field name="faceImage" label="人脸照片">
               <template #input>
                 <van-uploader
-                  v-model="visitorInfo.faceImage"
+                  v-model="visitorInfo.faceImage as any"
                   :max-count="1"
                   :rules="[{ required: true, message: '请上传人脸照片' }]"
                 />
@@ -265,7 +314,7 @@ onMounted(() => {
           </van-cell-group>
           <div style="margin: 16px">
             <van-button round block type="primary" native-type="submit" @click="handleSubmit"
-              >下一步
+            >下一步
             </van-button>
           </div>
         </van-form>

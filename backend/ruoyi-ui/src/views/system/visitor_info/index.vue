@@ -310,13 +310,15 @@
 </template>
 
 <script>
+
+
 import {
-  listVisitorInfo,
-  getVisitorInfo,
-  delVisitorInfo,
   addVisitorInfo,
+  delVisitorInfo,
+  getVisitorInfo,
+  listVisitorInfo,
   updateVisitorInfo
-} from "@/api/system/visit_record";
+} from "../../../api/system/visitor_info";
 
 export default {
   name: "Info",

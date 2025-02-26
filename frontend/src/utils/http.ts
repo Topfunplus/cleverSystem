@@ -2,6 +2,7 @@ import axios from 'axios'
 import { getToken } from '@/utils/auth'
 // @ts-ignore
 import Swal from 'sweetalert2/dist/sweetalert2.js'
+import { Log } from '@/utils/index'
 
 export interface AxiosResponseConfig<T = any> {
   code: number // 状态码
@@ -47,7 +48,22 @@ instance.interceptors.request.use(
 
 // 响应拦截器
 instance.interceptors.response.use(
-  (response) => {
+  (response: any) => {
+    if (response.code === 200) {
+      return response.data
+    }
+
+    if (response.code === 401) {
+      Log.error(`登录已过期，请重新登录`)
+      return Promise.reject(response)
+    }
+
+    if (response.code === 403) {
+      Log.error(`没有权限访问`)
+      window.location.href = '/login'
+      return Promise.reject(response)
+    }
+
     // 对响应数据做些什么
     return response.data // 直接返回响应数据
   },

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
 import { getCaptchaImage } from '@/api/login'
 import { useUserStore } from '@/stores/user'
 import type { AxiosResponseConfig } from '@/utils/http'
@@ -8,7 +8,7 @@ import { useRouter } from 'vue-router'
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import { Log } from '@/utils'
 
-const active = ref('login')
+const active = ref(0)
 // 登录信息
 const phonenumber = ref('')
 const idCard = ref('')
@@ -61,8 +61,8 @@ onMounted(() => {
 })
 
 // 切换标签页时刷新对应的验证码
-const handleTabChange = (name: string) => {
-  if (name === 'register') {
+const handleTabChange = (name: number) => {
+  if (name === 1) {
     getCaptcha(true)
   } else {
     getCaptcha(false)
@@ -138,36 +138,44 @@ function register() {
     })
     .then((res: AxiosResponseConfig) => {
       if (res.code === 200) {
-        Swal.fire({
-          title: '注册成功!',
-          icon: 'success',
-          draggable: true
-        })
-        active.value = 'login'
+        Log.success(`注册成功`)
+        // reset()
+        // nextTick(() => {
+        //   active.value = 0
+        // })
+        location.reload()
       } else {
-        Swal.fire({
-          title: res.msg,
-          icon: 'error',
-          draggable: true
-        })
+        Log.error(res.msg)
       }
     })
     .catch((err: AxiosResponseConfig) => {
-      Swal.fire({
-        title: err.msg,
-        icon: 'error',
-        draggable: true
-      })
+      Log.error(err.msg)
     })
 }
 
 // 切换注册和登录
 const switchToRegister = () => {
-  active.value = 'register'
+  active.value = 1
 }
 
 const switchToLogin = () => {
-  active.value = 'login'
+  active.value = 0
+}
+
+function reset() {
+  // 重置登录信息和注册信息
+  phonenumber.value = ''
+  registerPhonenumber.value = ''
+  registerPassword.value = ''
+  registeridCard.value = ''
+  confirmPassword.value = ''
+  password.value = ''
+  captcha.value = ''
+  registerCaptcha.value = ''
+  captchaImg.value = ''
+  registerCaptchaImg.value = ''
+  uuid.value = ''
+  registerUuid.value = ''
 }
 
 onMounted(() => {
@@ -180,7 +188,7 @@ onMounted(() => {
     <h1 class="login-title">智慧安防系统登录</h1>
     <div class="login-box">
       <van-tabs v-model:active="active" animated @change="handleTabChange">
-        <van-tab title="登录" name="login">
+        <van-tab title="登录" :name="0">
           <div class="form-container">
             <van-cell-group inset>
               <van-field
@@ -226,7 +234,7 @@ onMounted(() => {
           </div>
         </van-tab>
 
-        <van-tab title="注册" name="register">
+        <van-tab title="注册" :name="1">
           <div class="form-container">
             <van-cell-group inset>
               <van-field
